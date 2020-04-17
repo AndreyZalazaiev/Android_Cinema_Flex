@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "286717256156",
+    "firebase_url": "https://rest-api-auth-272517.firebaseio.com",
+    "project_id": "rest-api-auth-272517",
+    "storage_bucket": "rest-api-auth-272517.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:286717256156:android:f1cde2519d69e620a76f19",
+        "android_client_info": {
+          "package_name": "andrew.cinema.cinema"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "286717256156-qjsi1avos3go41q322iuion06okddeh2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "andrew.cinema.cinema",
+            "certificate_hash": "d4b3555667248ff4c872b8797de21d569421ee35"
+          }
+        },
+        {
+          "client_id": "286717256156-jffgsf0fuo1o99151abrt41q8roqaaut.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjXkqlA-E5810tmT0EaanCkxcaMbFYW4w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "286717256156-jffgsf0fuo1o99151abrt41q8roqaaut.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
