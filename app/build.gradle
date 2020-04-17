@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 29
@@ -23,6 +24,8 @@ android {
 
 }
 dependencies {
+    implementation 'com.google.firebase:firebase-inappmessaging-display:19.0.5'
+    implementation 'com.google.firebase:firebase-analytics:17.3.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'androidx.navigation:navigation-fragment:2.0.0'
@@ -36,7 +39,6 @@ dependencies {
     apply plugin: 'com.android.application'
     dependencies {
         implementation 'com.google.android.gms:play-services-auth:17.0.0'
-
     }
 
     implementation 'com.squareup.retrofit2:converter-scalars:2.1.0'
