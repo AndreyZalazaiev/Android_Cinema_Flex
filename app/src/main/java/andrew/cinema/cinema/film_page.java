@@ -64,6 +64,7 @@ public class film_page extends AppCompatActivity {
     }
 
     public void DrawPage() {
+        final Animation anim = AnimationUtils.loadAnimation(film_page.this,R.anim.zoomin);
         final Animation animRev = AnimationUtils.loadAnimation(film_page.this,R.anim.zoomout);
 
         Display display = getWindowManager().getDefaultDisplay();
@@ -103,6 +104,7 @@ public class film_page extends AppCompatActivity {
         img.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+
                     img.startAnimation(animRev);
                 return false;
             }
