@@ -214,7 +214,7 @@ public class Place_Picker extends AppCompatActivity {
                     Log.d("Place num:",""+v.getId());
                     ChangeColor(v.getId());
                     TextView total = findViewById(R.id.total);
-                    total.setText("Price for place is: " +baseprice+"\n");
+                    total.setText("Total price: " +places.size()*baseprice+"\n");
                     total.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
                     total.setTextColor(Color.BLACK);
                 }

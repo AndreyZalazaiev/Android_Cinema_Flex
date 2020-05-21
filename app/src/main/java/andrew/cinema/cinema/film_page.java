@@ -10,6 +10,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
@@ -111,7 +112,7 @@ public class film_page extends AppCompatActivity {
         });
 
         TextView title = new TextView(getApplicationContext());
-        title.setText(currentFilm.getName());
+        title.setText(Html.fromHtml("<b>"+currentFilm.getName()+"</b>"));
         title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 32);
         title.setTextAlignment(container.TEXT_ALIGNMENT_CENTER);
         TextView setup = new TextView(getApplicationContext());

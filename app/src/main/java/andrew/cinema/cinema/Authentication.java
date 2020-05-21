@@ -63,21 +63,10 @@ public class Authentication extends AppCompatActivity {
                 }
             }
         });
-        String x =getIntent().getStringExtra("mode");
         if(getIntent().getStringExtra("mode")==("signout"))
         {
-            mGoogleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                        @Override
-                        public void onComplete(@NonNull Task<Void> task) {
-                            // ...
-                        }
-                    });
-            mGoogleSignInClient.revokeAccess() .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                @Override
-                public void onComplete(@NonNull Task<Void> task) {
-                    // ...
-                }
-            });
+            mGoogleSignInClient.signOut();
+            //mGoogleSignInClient.revokeAccess();
         }
     }
     private void signIn() {
