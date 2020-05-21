@@ -19,14 +19,23 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.paypal.android.sdk.payments.PayPalConfiguration;
+import com.paypal.android.sdk.payments.PayPalPayment;
+import com.paypal.android.sdk.payments.PayPalService;
+import com.paypal.android.sdk.payments.PaymentActivity;
+import com.paypal.android.sdk.payments.PaymentConfirmation;
+
 import org.androidannotations.annotations.FromHtml;
 
+import java.math.BigDecimal;
 import java.security.spec.DSAParameterSpec;
 import java.util.ArrayList;
 import java.util.Date;
@@ -47,19 +56,23 @@ import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class Place_Picker extends AppCompatActivity {
     private String cinemaType;
-    private int rows=0;
+    private int rows = 0;
     private List<Integer> places = new ArrayList<>();
-    private int place=1;
+    private int place = 1;
+    private static int PAYPAL_REQUEST_CODE = 7171;
+    private static PayPalConfiguration config = new PayPalConfiguration().environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
+            .clientId(Config.PAYPAL_CLIENT_ID);
     private Retrofit retrofit;
     private TicketRepos ticketApi;
     private List<Ticket> tickets;
-    private float baseprice=0;
+    private float baseprice = 0;
     private int width;
     private int height;
     private int idsession;
-    private double hallCoef=0.06;
+    private double hallCoef = 0.06;
     private Integer sent = 1;
-    private boolean night=false;
+    private boolean night = false;
+
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,9 +80,9 @@ public class Place_Picker extends AppCompatActivity {
         sPref = getSharedPreferences("MyPref", MODE_PRIVATE);
         String mode = sPref.getString("DayNightMode", "true");
         sent = Integer.parseInt(sPref.getString("Sent", "1"));
-        if(mode.equals("true")) {
+        if (mode.equals("true")) {
             setTheme(R.style.Theme_AppCompat);
-            night=true;
+            night = true;
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.place_picker);
@@ -77,119 +90,119 @@ public class Place_Picker extends AppCompatActivity {
         Display display = getWindowManager().getDefaultDisplay();
         width = display.getWidth();
         height = display.getHeight();
-        baseprice=Float.parseFloat(getIntent().getStringExtra("baseprice"));
-        idsession=Integer.parseInt(getIntent().getStringExtra("idsession"));
+        baseprice = Float.parseFloat(getIntent().getStringExtra("baseprice"));
+        idsession = Integer.parseInt(getIntent().getStringExtra("idsession"));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Pick places");
         LoadTickets(idsession);
     }
-    public void setPlaces(String type)
-    {
+
+    public void setPlaces(String type) {
         Film current = Storage.getFilmById(Integer.parseInt(getIntent().getStringExtra("idfilm")));
         TextView tv = new TextView(getApplicationContext());
         tv.setTextSize(24);
         tv.setTextColor(Color.BLACK);
-        tv.setText(Html.fromHtml(current.getName()+"<br/> Type of Hall:"+type+"</br>"));
+        tv.setText(Html.fromHtml(current.getName() + "<br/> Type of Hall:" + type + "</br>"));
         LinearLayout ln = findViewById(R.id.Title);
         ln.setGravity(Gravity.TOP);
         ln.addView(tv);
 
-        switch (type)
-        {
-            case"3D":
-            case"2D":
-                hallCoef=0.085;
-            FillRow(13,3);
-            FillRow(14,2);
-            FillRow(15,1);
-            FillRow(15,1);
-            FillRow(15,1);
-            FillRow(15,1);
-            FillRow(15,1);
-            FillRow(15,1);
-            FillRow(15,1);
-            FillRow(15,1);
-            FillRow(15,1);
-            break;
-            case"4D":
-                hallCoef=0.085;
-                FillRow(11,3);
-                FillRow(12,2);
-                FillRow(13,1);
-                FillRow(13,1);
-                FillRow(13,1);
-                FillRow(13,1);
-                FillRow(13,1);
-                FillRow(13,1);
-                FillRow(13,1);
-                FillRow(13,1);
+        switch (type) {
+            case "3D":
+            case "2D":
+                hallCoef = 0.085;
+                FillRow(13, 3);
+                FillRow(14, 2);
+                FillRow(15, 1);
+                FillRow(15, 1);
+                FillRow(15, 1);
+                FillRow(15, 1);
+                FillRow(15, 1);
+                FillRow(15, 1);
+                FillRow(15, 1);
+                FillRow(15, 1);
+                FillRow(15, 1);
                 break;
-            case"IMAX":
-                hallCoef=0.085;
-                FillRow(18,2);
-                FillRow(19,1);
-                FillRow(20,0);
-                FillRow(20,0);
-                FillRow(20,0);
-                FillRow(20,0);
-                FillRow(20,0);
-                FillRow(20,0);
-                FillRow(20,0);
-                FillRow(20,0);
-                FillRow(20,0);
-                FillRow(20,0);
-                FillRow(20,0);
-                FillRow(20,0);
-                FillRow(20,0);
-                FillRow(20,0);
-                FillRow(20,0);
+            case "4D":
+                hallCoef = 0.085;
+                FillRow(11, 3);
+                FillRow(12, 2);
+                FillRow(13, 1);
+                FillRow(13, 1);
+                FillRow(13, 1);
+                FillRow(13, 1);
+                FillRow(13, 1);
+                FillRow(13, 1);
+                FillRow(13, 1);
+                FillRow(13, 1);
+                break;
+            case "IMAX":
+                hallCoef = 0.085;
+                FillRow(18, 2);
+                FillRow(19, 1);
+                FillRow(20, 0);
+                FillRow(20, 0);
+                FillRow(20, 0);
+                FillRow(20, 0);
+                FillRow(20, 0);
+                FillRow(20, 0);
+                FillRow(20, 0);
+                FillRow(20, 0);
+                FillRow(20, 0);
+                FillRow(20, 0);
+                FillRow(20, 0);
+                FillRow(20, 0);
+                FillRow(20, 0);
+                FillRow(20, 0);
+                FillRow(20, 0);
 
                 break;
             default://что-то
         }
     }
-    public void FillRow(int length,int skip)//Создание ряда
+
+    public void FillRow(int length, int skip)//Создание ряда
     {
-        LinearLayout container = (LinearLayout)findViewById(R.id.container4);
+        LinearLayout container = (LinearLayout) findViewById(R.id.container4);
         LinearLayout horizontal = new LinearLayout(Place_Picker.this);
         horizontal.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         horizontal.setOrientation(LinearLayout.HORIZONTAL);
-        horizontal.setTransitionName("Line"+rows);
-        horizontal.setPadding(0,20,0,20);
+        horizontal.setTransitionName("Line" + rows);
+        horizontal.setPadding(0, 20, 0, 20);
         rows++;
         container.addView(horizontal);
-        CreateButtons(length,horizontal,rows,skip);
+        CreateButtons(length, horizontal, rows, skip);
     }
-    public void CreateButtons(int count,LinearLayout container,int rowNum,int skip) { //Создать кнопки в ряду  *количество*,*ряд*
-       LinearLayout rowsContainer=findViewById(R.id.Rows);
+
+    public void CreateButtons(int count, LinearLayout container, int rowNum, int skip) { //Создать кнопки в ряду  *количество*,*ряд*
+        LinearLayout rowsContainer = findViewById(R.id.Rows);
         Button number = new Button(getApplicationContext());
-        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int)(height*hallCoef),(int)(height*hallCoef));
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int) (height * hallCoef), (int) (height * hallCoef));
         layoutParams.setMargins(15, 0, 15, 0);
-        if(rows<10)
-        number.setText("Ряд:"+rows);
+        if (rows < 10)
+            number.setText("Ряд:" + rows);
         else
-        number.setText("Ряд:"+rows);
-        if(night) {
+            number.setText("Ряд:" + rows);
+        if (night) {
             number.setTextColor(Color.BLACK);
         }
-        LinearLayout.LayoutParams rowParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,(int)(height*hallCoef));
-        rowParam.setMargins(0,20,0,20);
+        LinearLayout.LayoutParams rowParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) (height * hallCoef));
+        rowParam.setMargins(0, 20, 0, 20);
         number.setLayoutParams(rowParam);
-        number.setTextSize(TypedValue.COMPLEX_UNIT_SP,12);
+        number.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         number.setBackground(getResources().getDrawable(R.drawable.btn_transparent));
         rowsContainer.addView(number);
-        for(int i=0;i<skip;++i)
-        {
+        for (int i = 0; i < skip; ++i) {
             Button skpBtn = new Button(Place_Picker.this);
             skpBtn.setEnabled(false);
             skpBtn.setVisibility(View.INVISIBLE);
-            container.addView(skpBtn,layoutParams);
+            container.addView(skpBtn, layoutParams);
 
         }
         for (int i = 0; i < count; i++) {
             Button btn = new Button(Place_Picker.this);
-            btn.setId(rowNum*100+(i+1));
-            switch (isBuyed(rowNum,(i+1)))//состояние места
+            btn.setId(rowNum * 100 + (i + 1));
+            switch (isBuyed(rowNum, (i + 1)))//состояние места
             {
                 case 0:
                     btn.setTextColor(Color.parseColor("white"));
@@ -206,35 +219,35 @@ public class Place_Picker extends AppCompatActivity {
                     btn.setEnabled(false);
                     break;
             }
-            btn.setText(""+(i+1));
+            btn.setText("" + (i + 1));
             place++;
             final int index = i;
             btn.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View v) {
-                    Log.d("Place num:",""+v.getId());
+                    Log.d("Place num:", "" + v.getId());
                     ChangeColor(v.getId());
                     TextView total = findViewById(R.id.total);
-                    total.setText("Total price: " +places.size()*baseprice+"\n");
-                    total.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
+                    total.setText("Total price: " + places.size() * baseprice + "\n");
+                    total.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                     total.setTextColor(Color.BLACK);
                 }
             });
-            container.addView(btn,layoutParams);
+            container.addView(btn, layoutParams);
         }
     }
+
     public void ChangeColor(int id)//Меняет цвет после нажатия на кнопку с местом и записывает в List places
     {
         Button btn = (Button) findViewById(id);
-        if(places.contains(id)) {
+        if (places.contains(id)) {
             places.remove(places.indexOf(id));
             btn.setBackground(getResources().getDrawable(R.drawable.btn_background));
-        }
-        else
-        {
+        } else {
             places.add(id);
             btn.setBackground(getResources().getDrawable(R.drawable.btn_bought));//Без паники,оно работает
         }
     }
+
     @Override
     public void onBackPressed() {
         // super.onBackPressed();
@@ -243,6 +256,7 @@ public class Place_Picker extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -256,19 +270,19 @@ public class Place_Picker extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
-    public void LoadTickets(Integer idsession)
-    {
+
+    public void LoadTickets(Integer idsession) {
         retrofit = new Retrofit.Builder()
                 .baseUrl("https://restapicinema.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
-        ticketApi= retrofit.create(TicketRepos.class);
+        ticketApi = retrofit.create(TicketRepos.class);
         ticketApi.getTickets(idsession)
                 .enqueue(new Callback<List<Ticket>>() {
                     @Override
                     public void onResponse(Call<List<Ticket>> call, Response<List<Ticket>> response) {
                         Log.w("Session result:", "Works");
-                        tickets=response.body();
+                        tickets = response.body();
                         setPlaces(getIntent().getStringExtra("type"));
                     }
 
@@ -278,13 +292,11 @@ public class Place_Picker extends AppCompatActivity {
                     }
                 });
     }
-    public int isBuyed(Integer row,Integer place)
-    {
-        for (Ticket tk:tickets){
-            if(tk.getRownum().equals(row)&&tk.getPlace().equals(place))
-            {
-                if(tk.getIdaccount().equals(Storage.idaccount))
-                {
+
+    public int isBuyed(Integer row, Integer place) {
+        for (Ticket tk : tickets) {
+            if (tk.getRownum().equals(row) && tk.getPlace().equals(place)) {
+                if (tk.getIdaccount().equals(Storage.idaccount)) {
                     return 2;//билет куплен и принадлежит текущему пользователю
                 }
                 return 1;//место занято
@@ -292,26 +304,55 @@ public class Place_Picker extends AppCompatActivity {
         }
         return 0;//не куплен
     }
-    public void onBuy(View v)
-    {
-        String row = "";
-        String place="";
-        for (int i = 0;i<places.size();i++) {
-           if(i!=places.size()-1) {
-               place += (places.get(i) % 100) + ",";
-               row += ((places.get(i) - places.get(i) % 100) / 100) + ",";
-           }
-           else {
-               place += (places.get(i) % 100) ;
-               row += ((places.get(i) - places.get(i) % 100) / 100) ;
-           }
-        }
-        SendNotification("Pepega");
-        AddManyTickets(row,place);
 
-
+    @Override
+    protected void onDestroy() {
+        stopService(new Intent(this, PayPalService.class));
+        super.onDestroy();
     }
-    public void AddManyTickets(String row,String place)
+
+    public void onBuy(View v) {
+       /* Intent intent = new Intent(this, PayPalService.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
+        startService(intent);*/
+
+        ProcessPayment(places.size()*baseprice*1.0);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PAYPAL_REQUEST_CODE) {
+            if (resultCode == RESULT_OK) {
+                PaymentConfirmation confirmation = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
+                if (confirmation != null) {
+                    String row = "";
+                    String place = "";
+                    for (int i = 0; i < places.size(); i++) {
+                        if (i != places.size() - 1) {
+                            place += (places.get(i) % 100) + ",";
+                            row += ((places.get(i) - places.get(i) % 100) / 100) + ",";
+                        } else {
+                            place += (places.get(i) % 100);
+                            row += ((places.get(i) - places.get(i) % 100) / 100);
+                        }
+                    }
+                    SendNotification("Pepega");
+                    AddManyTickets(row, place);
+                } else if(resultCode==PaymentActivity.RESULT_CANCELED) {
+                    Toast.makeText(this, "Cancel", Toast.LENGTH_SHORT).show();
+                }
+                else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
+                    Toast.makeText(this, "Cancel", Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        }
+    }
+
+
+
+    public void AddManyTickets(String row, String place)
     {
         String [] temp = row.split(",");
         StringBuilder sb = new StringBuilder();
@@ -380,5 +421,13 @@ public class Place_Picker extends AppCompatActivity {
                         }).
                         setView(image);
         builder.create().show();
+    }
+    void ProcessPayment(Double price)
+    {
+        PayPalPayment payPalPayment= new PayPalPayment(new BigDecimal(price),"USD","Pay for tickets:",PayPalPayment.PAYMENT_INTENT_SALE);
+        Intent intent = new Intent(this, PaymentActivity.class);
+        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION,config);
+        intent.putExtra(PaymentActivity.EXTRA_PAYMENT,payPalPayment);
+        startActivityForResult(intent,PAYPAL_REQUEST_CODE);
     }
 }
