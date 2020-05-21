@@ -1,6 +1,7 @@
 package andrew.cinema.cinema;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -18,12 +19,14 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import lombok.NonNull;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.FormBody;
@@ -37,6 +40,11 @@ public class Authentication extends AppCompatActivity {
     GoogleSignInClient mGoogleSignInClient ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences sPref;
+        sPref = getSharedPreferences("MyPref", MODE_PRIVATE);
+        String mode = sPref.getString("DayNightMode", "true");
+        if(mode.equals("true"))
+            setTheme(R.style.Theme_AppCompat_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.authentication);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
@@ -55,6 +63,22 @@ public class Authentication extends AppCompatActivity {
                 }
             }
         });
+        String x =getIntent().getStringExtra("mode");
+        if(getIntent().getStringExtra("mode")==("signout"))
+        {
+            mGoogleSignInClient.signOut().addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Void> task) {
+                            // ...
+                        }
+                    });
+            mGoogleSignInClient.revokeAccess() .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                @Override
+                public void onComplete(@NonNull Task<Void> task) {
+                    // ...
+                }
+            });
+        }
     }
     private void signIn() {
         Intent signInIntent = mGoogleSignInClient.getSignInIntent();

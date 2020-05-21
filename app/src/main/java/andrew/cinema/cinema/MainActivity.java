@@ -1,68 +1,30 @@
 package andrew.cinema.cinema;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.OnLifecycleEvent;
-import androidx.navigation.NavController;
-import androidx.navigation.Navigation;
-import androidx.navigation.ui.AppBarConfiguration;
-import androidx.navigation.ui.NavigationUI;
-
-import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
-import android.widget.Toolbar;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
-
-import org.androidannotations.annotations.ViewById;
-
-import java.io.IOException;
-import java.net.Socket;
-import java.util.List;
-
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.navigation.ui.AppBarConfiguration;
 
 import lombok.SneakyThrows;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 
-public class MainActivity extends AppCompatActivity  {
-    OkHttpClient client = new OkHttpClient();
+public class MainActivity extends AppCompatActivity     {
     String res = "";
     Boolean get = false;
-    DrawerLayout drawerLayout;
-    NavigationView navigationView;
-    Toolbar toolbar;
-    Menu menu;
-    TextView textView;
+    private AppBarConfiguration mAppBarConfiguration;
 
-    @SuppressLint("ResourceType")
     @SneakyThrows
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences sPref;
+        sPref = getSharedPreferences("MyPref", MODE_PRIVATE);
+        String mode = sPref.getString("DayNightMode", "true");
+        if(mode.equals("true"))
+            setTheme(R.style.Theme_AppCompat_NoActionBar);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
 
     }
     public void ButtonOnClick(View v) {
@@ -89,4 +51,5 @@ public class MainActivity extends AppCompatActivity  {
         startActivity(intent2);
         finish();
     }
+
 }

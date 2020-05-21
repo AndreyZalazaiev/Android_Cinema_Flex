@@ -28,4 +28,16 @@ public interface AccountRepos {
     );
     @GET("/accounts")
     Call<List<Account>> shortAccounts();
+    @GET("/account/info")
+    Call<String> loadAll(@Query("idaccount") String id);
+    @GET("/accounts/update")
+    Call<String> updateDob(@Query("idaccount") String id,@Query("dob") String dob);
+    @GET("/accounts/bonuses")
+    Call<String> updateBonuses(@Query("idaccount") String id,@Query("bonuses") Integer bonus);
+    @GET("/accounts/isresived")
+    Call<String> updateIsresived(@Query("idaccount") String id,@Query("isresived") Integer isresived);
+    @GET("/accounts/isgift")
+    Call<String> getIsresived(@Query("idaccount") String id);
+    @GET("/accounts/hours")
+    Call<String> getHours(@Query("idaccount") String id);
 }

@@ -9,10 +9,17 @@
         android:background="#00000000">
 
         <LinearLayout
-            android:id="@+id/container"
+            android:id="@+id/Container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" />
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:id="@+id/imageCont"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"></LinearLayout>
+        </LinearLayout>
     </ScrollView>
 
     <LinearLayout
@@ -27,25 +34,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:onClick="ToSessionPick"
-            android:text="Button" />
+            android:text="Select session" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="top|left"
+        android:gravity="right|top"
         android:orientation="horizontal">
-
-        <ImageButton
-            android:id="@+id/imageButton2"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_margin="5dp"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="5dp"
-            android:background="#03A9F4"
-            android:onClick="BackToFilms"
-            app:srcCompat="@android:drawable/ic_menu_revert" />
 
         <ImageButton
             android:id="@+id/Feedback"

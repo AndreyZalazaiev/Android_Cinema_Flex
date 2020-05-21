@@ -1,38 +1,49 @@
 package andrew.cinema.cinema;
 
+import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.Display;
-import android.view.MotionEvent;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.annotation.RequiresApi;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import org.androidannotations.annotations.FromHtml;
+
+import java.security.spec.DSAParameterSpec;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
-import andrew.cinema.cinema.Entities.Halls;
-import andrew.cinema.cinema.Entities.Session;
+import andrew.cinema.cinema.Entities.Film;
 import andrew.cinema.cinema.Entities.Storage;
 import andrew.cinema.cinema.Entities.Ticket;
-import andrew.cinema.cinema.Repos.HallRepos;
-import andrew.cinema.cinema.Repos.SessionRepos;
 import andrew.cinema.cinema.Repos.TicketRepos;
 import lombok.SneakyThrows;
+import lombok.val;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
-import retrofit2.http.Query;
 
 public class Place_Picker extends AppCompatActivity {
     private String cinemaType;
@@ -47,56 +58,92 @@ public class Place_Picker extends AppCompatActivity {
     private int height;
     private int idsession;
     private double hallCoef=0.06;
+    private Integer sent = 1;
+    private boolean night=false;
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences sPref;
+        sPref = getSharedPreferences("MyPref", MODE_PRIVATE);
+        String mode = sPref.getString("DayNightMode", "true");
+        sent = Integer.parseInt(sPref.getString("Sent", "1"));
+        if(mode.equals("true")) {
+            setTheme(R.style.Theme_AppCompat);
+            night=true;
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.place_picker);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);//ошибки в мусорку ты свои перенаправь, user expirence - это не про нас
         Display display = getWindowManager().getDefaultDisplay();
         width = display.getWidth();
         height = display.getHeight();
         baseprice=Float.parseFloat(getIntent().getStringExtra("baseprice"));
         idsession=Integer.parseInt(getIntent().getStringExtra("idsession"));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Pick places");
         LoadTickets(idsession);
-    }
-    public void Place_Picker(String cinemaType)
-    {
-        this.cinemaType=cinemaType;
     }
     public void setPlaces(String type)
     {
+        Film current = Storage.getFilmById(Integer.parseInt(getIntent().getStringExtra("idfilm")));
+        TextView tv = new TextView(getApplicationContext());
+        tv.setTextSize(24);
+        tv.setTextColor(Color.BLACK);
+        tv.setText(Html.fromHtml(current.getName()+"<br/> Type of Hall:"+type+"</br>"));
+        LinearLayout ln = findViewById(R.id.Title);
+        ln.setGravity(Gravity.TOP);
+        ln.addView(tv);
+
         switch (type)
         {
             case"3D":
-                hallCoef=0.06;
-            FillRow(3,3);
-            FillRow(6,2);
-            FillRow(7,1);
-            FillRow(8,1);
-            FillRow(8,1);
-            break;
             case"2D":
-                hallCoef=0.07;
-                FillRow(2,1);
-                FillRow(4,1);
-                FillRow(6,1);
-                FillRow(6,1);
-                FillRow(7,1);
-                break;
+                hallCoef=0.085;
+            FillRow(13,3);
+            FillRow(14,2);
+            FillRow(15,1);
+            FillRow(15,1);
+            FillRow(15,1);
+            FillRow(15,1);
+            FillRow(15,1);
+            FillRow(15,1);
+            FillRow(15,1);
+            FillRow(15,1);
+            FillRow(15,1);
+            break;
             case"4D":
-                hallCoef=0.07;
-                FillRow(4,1);
-                FillRow(6,1);
-                FillRow(8,1);
-                FillRow(8,1);
-                FillRow(8,1);
+                hallCoef=0.085;
+                FillRow(11,3);
+                FillRow(12,2);
+                FillRow(13,1);
+                FillRow(13,1);
+                FillRow(13,1);
+                FillRow(13,1);
+                FillRow(13,1);
+                FillRow(13,1);
+                FillRow(13,1);
+                FillRow(13,1);
                 break;
             case"IMAX":
-                hallCoef=0.05;
-                FillRow(5,1);
-                FillRow(7,1);
-                FillRow(8,1);
-                FillRow(8,1);
-                FillRow(8,1);
+                hallCoef=0.085;
+                FillRow(18,2);
+                FillRow(19,1);
+                FillRow(20,0);
+                FillRow(20,0);
+                FillRow(20,0);
+                FillRow(20,0);
+                FillRow(20,0);
+                FillRow(20,0);
+                FillRow(20,0);
+                FillRow(20,0);
+                FillRow(20,0);
+                FillRow(20,0);
+                FillRow(20,0);
+                FillRow(20,0);
+                FillRow(20,0);
+                FillRow(20,0);
+                FillRow(20,0);
+
                 break;
             default://что-то
         }
@@ -114,11 +161,23 @@ public class Place_Picker extends AppCompatActivity {
         CreateButtons(length,horizontal,rows,skip);
     }
     public void CreateButtons(int count,LinearLayout container,int rowNum,int skip) { //Создать кнопки в ряду  *количество*,*ряд*
-        TextView number= new TextView(Place_Picker.this);
+       LinearLayout rowsContainer=findViewById(R.id.Rows);
+        Button number = new Button(getApplicationContext());
         LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams((int)(height*hallCoef),(int)(height*hallCoef));
         layoutParams.setMargins(15, 0, 15, 0);
-        number.setText("Ряд:"+rows+"  ");
-        container.addView(number);
+        if(rows<10)
+        number.setText("Ряд:"+rows);
+        else
+        number.setText("Ряд:"+rows);
+        if(night) {
+            number.setTextColor(Color.BLACK);
+        }
+        LinearLayout.LayoutParams rowParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,(int)(height*hallCoef));
+        rowParam.setMargins(0,20,0,20);
+        number.setLayoutParams(rowParam);
+        number.setTextSize(TypedValue.COMPLEX_UNIT_SP,12);
+        number.setBackground(getResources().getDrawable(R.drawable.btn_transparent));
+        rowsContainer.addView(number);
         for(int i=0;i<skip;++i)
         {
             Button skpBtn = new Button(Place_Picker.this);
@@ -154,6 +213,10 @@ public class Place_Picker extends AppCompatActivity {
                 public void onClick(View v) {
                     Log.d("Place num:",""+v.getId());
                     ChangeColor(v.getId());
+                    TextView total = findViewById(R.id.total);
+                    total.setText("Price for place is: " +baseprice+"\n");
+                    total.setTextSize(TypedValue.COMPLEX_UNIT_SP,20);
+                    total.setTextColor(Color.BLACK);
                 }
             });
             container.addView(btn,layoutParams);
@@ -179,6 +242,19 @@ public class Place_Picker extends AppCompatActivity {
         intent.putExtra("idfilm", getIntent().getStringExtra("idfilm"));
         startActivity(intent);
         finish();
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                Intent intent = new Intent(Place_Picker.this, session_pick.class);
+                intent.putExtra("idfilm", getIntent().getStringExtra("idfilm"));
+                startActivity(intent);
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
     public void LoadTickets(Integer idsession)
     {
@@ -230,27 +306,33 @@ public class Place_Picker extends AppCompatActivity {
                row += ((places.get(i) - places.get(i) % 100) / 100) ;
            }
         }
+        SendNotification("Pepega");
         AddManyTickets(row,place);
+
 
     }
     public void AddManyTickets(String row,String place)
     {
         String [] temp = row.split(",");
         StringBuilder sb = new StringBuilder();
+        int bonus=0;
         for(int i =0 ;i<temp.length;i++)
         {
+            bonus+=Storage.CalculateBonuses(baseprice);
             if(i!=temp.length-1) {
-                sb.append("220,");
+                sb.append(baseprice);
+                sb.append(",");
             }
             else
-            sb.append("220");//Заглушка для цены//поменять
+            sb.append(baseprice);//Заглушка для цены//поменять
         }
+        Storage.bonus+=bonus;
         retrofit = new Retrofit.Builder()
                 .baseUrl("https://restapicinema.herokuapp.com")
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .build();
         ticketApi = retrofit.create(TicketRepos.class);
-        ticketApi.addTickets(Storage.idaccount,idsession,sb.toString(),place,row)
+        ticketApi.addTickets(Storage.idaccount,idsession,sb.toString(),place,row,bonus,sent)
                 .enqueue(new Callback<String>() {
                     @SneakyThrows
                     @Override
@@ -268,5 +350,35 @@ public class Place_Picker extends AppCompatActivity {
         intent.putExtra("idfilm", getIntent().getStringExtra("idfilm"));
         startActivity(intent);
         finish();
+    }
+    public void SendNotification(String ChannelId)
+    {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, ChannelId)
+                .setSmallIcon(R.drawable.ic_local_activity_black_24dp)
+                .setContentTitle("Поздравляем с покупкой")
+                .setWhen(new Date().getTime()+100000)
+                .setContentText("Проверьте биллеты в приложении!")
+                .setStyle(new NotificationCompat.BigTextStyle()
+                        .bigText(":)"))
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify(1, builder.build());
+    }
+    public void onLegendClick(View v)
+    {
+        ImageView image = new ImageView(this);
+        image.setImageResource(R.drawable.legend);
+
+        AlertDialog.Builder builder =
+                new AlertDialog.Builder(this).
+                        setMessage("Legend").
+                        setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        }).
+                        setView(image);
+        builder.create().show();
     }
 }

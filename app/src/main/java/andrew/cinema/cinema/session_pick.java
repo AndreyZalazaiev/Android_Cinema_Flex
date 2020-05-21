@@ -3,12 +3,14 @@ package andrew.cinema.cinema;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Display;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -19,7 +21,6 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.text.ParseException;
@@ -32,6 +33,7 @@ import andrew.cinema.cinema.Entities.Film;
 import andrew.cinema.cinema.Entities.Halls;
 import andrew.cinema.cinema.Entities.Session;
 import andrew.cinema.cinema.Entities.Storage;
+import andrew.cinema.cinema.Menu.about_account;
 import andrew.cinema.cinema.Repos.HallRepos;
 import andrew.cinema.cinema.Repos.SessionRepos;
 import lombok.SneakyThrows;
@@ -48,11 +50,21 @@ public class session_pick extends AppCompatActivity {
     private List<Session> ss;
     private List<Halls> hl;
     private final int TempCinema = Storage.idcinema;
+    boolean night = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences sPref;
+        sPref = getSharedPreferences("MyPref", MODE_PRIVATE);
+        String mode = sPref.getString("DayNightMode", "true");
+        if(mode.equals("true")) {
+            night=true;
+            setTheme(R.style.Theme_AppCompat);
+        }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_session_pick);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Select session");
         LoadSessoins(Integer.parseInt(getIntent().getStringExtra("idfilm")));
     }
 
@@ -81,14 +93,14 @@ public class session_pick extends AppCompatActivity {
 
     public void SessionDraw(List<Session> sessions, List<Halls> halls) throws ParseException {
         Display display = getWindowManager().getDefaultDisplay();
-        int width = display.getWidth();
+        final int width = display.getWidth();
         int height = display.getHeight();
         double size = 1.7;
         hl=halls;
 
         sessions = FilterSessions(sessions, halls);
         Film currentFilm = Storage.getFilmById(Integer.parseInt(getIntent().getStringExtra("idfilm")));
-        final LinearLayout container = findViewById(R.id.container);
+        final LinearLayout container = findViewById(R.id.Container);
         final LinearLayout scrollSessionContainer = new LinearLayout(getApplicationContext());//внутренний контейнер скрола
         final HorizontalScrollView scrollSession = new HorizontalScrollView(getApplicationContext());//сам скрол
         //Initialize
@@ -111,10 +123,13 @@ public class session_pick extends AppCompatActivity {
         }
         container.addView(img);
         text.setText(currentFilm.getName());
-        text.setTextColor(Color.MAGENTA);
+        if(night)
+        text.setTextColor(Color.WHITE);
+        else
+            text.setTextColor(Color.BLACK);
         text.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 32);
         container.addView(text);
-        if (sessions.size() > 0) {
+        if (sessions.size() > 0  ) {
 
             LinearLayout scrollDaysContainer = new LinearLayout(this);
             HorizontalScrollView scrollDays = new HorizontalScrollView(this);
@@ -129,10 +144,12 @@ public class session_pick extends AppCompatActivity {
                 LinearLayout.LayoutParams lnP= new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 lnP.setMargins(20,0,20,0);
                 btn.setLayoutParams(lnP);
+                btn.setTextColor(Color.WHITE);
+                btn.setBackground(getResources().getDrawable(R.drawable.date_btn_background));
                 btn.setAllCaps(false);
                 btn.setText(getDayOfWeek(dt.getDay()) + " " + dt.getDate() + " " + getMonthName(dt.getMonth()));
-                btn.setTextColor(Color.BLACK);
-                btn.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12);
+                btn.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14);
+                btn.setPadding(40,0,40,0);
                 btn.setOnClickListener(new View.OnClickListener() {
                     @SneakyThrows
                     @Override
@@ -169,6 +186,8 @@ public class session_pick extends AppCompatActivity {
                             textContainer.addView(dateEnd);
                             textContainer.addView(hallName);
                             localContainer.addView(textContainer);
+                            localContainer.setBackgroundResource(R.drawable.films_drawable_back);
+                            localContainer.setPadding(50,0,50,50);
                             localContainer.addView(img2);
                             localContainer.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -176,6 +195,7 @@ public class session_pick extends AppCompatActivity {
                                     Intent intent = new Intent(session_pick.this, Place_Picker.class);
                                     intent.putExtra("idfilm",getIntent().getStringExtra("idfilm"));
                                     intent.putExtra("idsession",""+sn.getIdsession());
+                                    intent.putExtra("baseprice",""+sn.getBaseprice());
                                     intent.putExtra("type",""+getHallBySession(sn).getType());
                                     startActivity(intent);
                                     finish();
@@ -222,6 +242,8 @@ public class session_pick extends AppCompatActivity {
                 textContainer.addView(hallName);
                 localContainer.addView(textContainer);
                 localContainer.addView(img2);
+                localContainer.setBackgroundResource(R.drawable.films_drawable_back);
+                localContainer.setPadding(50,0,50,50);
                 localContainer.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -250,8 +272,12 @@ public class session_pick extends AppCompatActivity {
         } else {
             TextView eror = new TextView(this);
             eror.setText("No sessions for today :(");
+            eror.setPadding(50,50,50,50);
+            if(night)
+                eror.setTextColor(Color.WHITE);
+            else
+                eror.setTextColor(Color.BLACK);
             eror.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 32);
-            eror.setTextColor(Color.BLACK);
             container.addView(eror);
         }
 
@@ -269,7 +295,7 @@ public class session_pick extends AppCompatActivity {
         }
             return null;
     }
-    public String ExcludeTime(String date) {
+    public static String ExcludeTime(String date) {
         String[] a = date.split("T");
         String[] b = a[1].split(":");
         return b[0] + ":" + b[1];
@@ -437,5 +463,18 @@ public class session_pick extends AppCompatActivity {
         intent.putExtra("idfilm", getIntent().getStringExtra("idfilm"));
         startActivity(intent);
         finish();
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                Intent intent = new Intent(session_pick.this, film_page.class);
+                intent.putExtra("idfilm", getIntent().getStringExtra("idfilm"));
+                startActivity(intent);
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
