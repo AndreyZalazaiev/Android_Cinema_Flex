@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single"
+        android:id="@+id/g1">
+        <item
+            android:id="@+id/nav_tickets"
+            android:icon="@drawable/ic_local_activity_black_24dp"
+            android:title="@string/tickets" />
+        <item
+            android:id="@+id/nav_bonuses"
+            android:icon="@drawable/ic_card_giftcard_black_24dp"
+            android:title="@string/bonuses" />
+        <item
+            android:id="@+id/nav_dob"
+            android:icon="@drawable/ic_cake_black_24dp"
+            android:title="@string/dob" />
+        <item
+            android:id="@+id/nav_infoinfo"
+            android:icon="@drawable/ic_info_black_24dp"
+            android:title="@string/info" />
+
+    </group>
+    <group android:checkableBehavior="single"
+        android:id="@+id/g2">
+        <item
+            android:id="@+id/nav_change_cinema"
+            android:icon="@drawable/ic_edit_location_black_24dp"
+            android:title="@string/change_cinema" />
+        <item
+            android:id="@+id/nav_setting"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/settings" />
+        <item
+            android:id="@+id/nav_web"
+            android:icon="@drawable/ic_open_in_new_black_24dp"
+            android:title="@string/web" />
+
+        <item
+            android:id="@+id/nav_support"
+            android:icon="@drawable/ic_help_black_24dp"
+            android:title="@string/support" />
+    </group>
+<group android:checkableBehavior="single"
+android:id="@+id/g3">
+    <item
+        android:id="@+id/nav_exit"
+        android:icon="@drawable/ic_exit_to_app_black_24dp"
+        android:title="@string/exit" />
+</group>
+</menu>
