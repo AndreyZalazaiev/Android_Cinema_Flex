@@ -38,6 +38,7 @@
                 android:id="@+id/BorderTop"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:layout_marginTop="8dp"
                 android:layout_marginBottom="2dp"
                 android:background="@color/borders"
                 android:orientation="horizontal">

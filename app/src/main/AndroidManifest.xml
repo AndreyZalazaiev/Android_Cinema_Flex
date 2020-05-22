@@ -11,7 +11,6 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/icon_start"
         android:label="Cinema Flex"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"

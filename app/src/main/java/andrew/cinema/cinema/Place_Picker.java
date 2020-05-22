@@ -312,12 +312,13 @@ public class Place_Picker extends AppCompatActivity {
     }
 
     public void onBuy(View v) {
-       /* Intent intent = new Intent(this, PayPalService.class);
-        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION, config);
-        startService(intent);*/
-
-        ProcessPayment(places.size()*baseprice*1.0);
-    }
+        if(places.size()!=0) {
+            ProcessPayment(places.size() * baseprice * 1.0);
+        }
+        else {
+            Toast.makeText(this, "Pick at least one place", Toast.LENGTH_SHORT).show();
+        }
+    }//при нажатии кнопки купить
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -349,9 +350,6 @@ public class Place_Picker extends AppCompatActivity {
             }
         }
     }
-
-
-
     public void AddManyTickets(String row, String place)
     {
         String [] temp = row.split(",");
