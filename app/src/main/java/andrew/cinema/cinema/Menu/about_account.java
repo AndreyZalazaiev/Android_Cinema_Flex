@@ -2,14 +2,11 @@ package andrew.cinema.cinema.Menu;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.text.Html;
 import android.util.Log;
@@ -18,7 +15,6 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,13 +25,12 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
 import java.text.DecimalFormat;
-import java.util.Random;
 
-import andrew.cinema.cinema.Entities.Storage;
-import andrew.cinema.cinema.Film_Pick;
+import andrew.cinema.cinema.Utils.Storage;
+import andrew.cinema.cinema.Activities.Film_Pick;
 import andrew.cinema.cinema.R;
 import andrew.cinema.cinema.Repos.AccountRepos;
-import lombok.SneakyThrows;
+import andrew.cinema.cinema.Utils.Util;
 import lombok.val;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -215,7 +210,7 @@ public class about_account extends AppCompatActivity {
     }
 
     public void showQR(View v) throws WriterException, Settings.SettingNotFoundException {
-        final val qr = Storage.TextToImageEncode(Storage.idaccount, (int) (width * 0.1));
+        final val qr = Util.TextToImageEncode(Storage.idaccount, (int) (width * 0.1));
         final val temp = new ImageView(getApplicationContext());
         temp.setImageBitmap(qr);
         temp.setMinimumHeight((int) (width * 0.8));

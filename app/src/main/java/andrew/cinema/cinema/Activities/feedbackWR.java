@@ -1,4 +1,4 @@
-package andrew.cinema.cinema;
+package andrew.cinema.cinema.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RatingBar;
 
+import andrew.cinema.cinema.R;
 import andrew.cinema.cinema.Repos.AccountRepos;
 import andrew.cinema.cinema.Repos.ReviewRepos;
 import lombok.SneakyThrows;

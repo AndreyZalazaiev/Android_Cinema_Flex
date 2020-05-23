@@ -19,15 +19,14 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
 
-import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 
-import andrew.cinema.cinema.Entities.Storage;
-import andrew.cinema.cinema.Film_Pick;
+import andrew.cinema.cinema.Utils.Storage;
+import andrew.cinema.cinema.Activities.Film_Pick;
 import andrew.cinema.cinema.R;
 import andrew.cinema.cinema.Repos.AccountRepos;
-import andrew.cinema.cinema.ui.fragments.DatePickerFragment;
+import andrew.cinema.cinema.UI.fragments.DatePickerFragment;
 import lombok.SneakyThrows;
 import lombok.val;
 import retrofit2.Call;
@@ -44,7 +43,7 @@ public class gift_for_dob extends AppCompatActivity implements DatePickerDialog.
     private AccountRepos accApi;
     private int width;
     private int height;
-    private int BONUSES_VALUE=Storage.CalculateBonuses(1500);
+    private int BONUSES_VALUE=Storage.CalculateBonuses(150);
 
     @SneakyThrows
     @Override
@@ -243,7 +242,7 @@ public class gift_for_dob extends AppCompatActivity implements DatePickerDialog.
         finish();
     }
 
-    public boolean isBirthday() throws ParseException {
+    public boolean isBirthday()  {
 
         Date now = new Date();
         Integer day = now.getDate();
@@ -317,6 +316,7 @@ public class gift_for_dob extends AppCompatActivity implements DatePickerDialog.
                         Log.w("Response result:", "Works");
                         setIsResived(id);
                         Storage.bonus += BONUSES_VALUE;
+
                     }
 
                     @Override

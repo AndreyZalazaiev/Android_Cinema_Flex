@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -15,8 +14,7 @@ import android.widget.CompoundButton;
 import android.widget.Switch;
 import android.widget.TextView;
 
-import andrew.cinema.cinema.Entities.Session;
-import andrew.cinema.cinema.Film_Pick;
+import andrew.cinema.cinema.Activities.Film_Pick;
 import andrew.cinema.cinema.R;
 import lombok.val;
 

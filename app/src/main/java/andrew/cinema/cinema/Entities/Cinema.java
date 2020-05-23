@@ -6,9 +6,9 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Cinema {
-    int idcinema;
-    String adress;
-    String name;
+    private int idcinema;
+    private String adress;
+    private String name;
 
 
 }

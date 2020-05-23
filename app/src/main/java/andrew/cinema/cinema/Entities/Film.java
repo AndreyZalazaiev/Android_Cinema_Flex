@@ -6,11 +6,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class Film {
-    int idfilm;
-    String description;
-    String name;
-    String trailer;
-    String image;
-    String ageLimit;
-    String genre;
+    private int idfilm;
+    private String description;
+    private String name;
+    private String trailer;
+    private String image;
+    private String ageLimit;
+    private String genre;
 }

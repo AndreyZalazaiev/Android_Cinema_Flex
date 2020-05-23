@@ -1,4 +1,4 @@
-package andrew.cinema.cinema.ui.home;
+package andrew.cinema.cinema.UI.gallery;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -14,19 +14,20 @@ import androidx.lifecycle.ViewModelProviders;
 
 import andrew.cinema.cinema.R;
 
-public class HomeFragment extends Fragment {
+public class GalleryFragment extends Fragment {
 
-    private HomeViewModel homeViewModel;
+    private GalleryViewModel galleryViewModel;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        homeViewModel =
-                ViewModelProviders.of(this).get(HomeViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_home, container, false);
-        final TextView textView = root.findViewById(R.id.text_home);
-        homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
+        galleryViewModel =
+                ViewModelProviders.of(this).get(GalleryViewModel.class);
+        View root = inflater.inflate(R.layout.fragment_gallery, container, false);
+        final TextView textView = root.findViewById(R.id.text_gallery);
+        galleryViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
+                textView.setText(s);
             }
         });
         return root;

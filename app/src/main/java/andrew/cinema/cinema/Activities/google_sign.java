@@ -1,21 +1,19 @@
-package andrew.cinema.cinema;
+package andrew.cinema.cinema.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 
-import org.apache.commons.validator.routines.UrlValidator;
-
 import andrew.cinema.cinema.Entities.Account;
-import andrew.cinema.cinema.Entities.Storage;
+import andrew.cinema.cinema.R;
+import andrew.cinema.cinema.Utils.Storage;
 import andrew.cinema.cinema.Repos.AccountRepos;
 import retrofit2.Call;
 import retrofit2.Callback;

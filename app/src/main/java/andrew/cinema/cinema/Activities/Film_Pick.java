@@ -1,4 +1,4 @@
-package andrew.cinema.cinema;
+package andrew.cinema.cinema.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,7 +23,6 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -32,10 +31,6 @@ import androidx.navigation.Navigation;
 import androidx.navigation.ui.AppBarConfiguration;
 import androidx.navigation.ui.NavigationUI;
 
-import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.makeramen.roundedimageview.RoundedTransformationBuilder;
 import com.squareup.picasso.Picasso;
@@ -44,14 +39,14 @@ import com.squareup.picasso.Transformation;
 import java.util.List;
 
 import andrew.cinema.cinema.Entities.Film;
-import andrew.cinema.cinema.Entities.Storage;
+import andrew.cinema.cinema.R;
+import andrew.cinema.cinema.Utils.Storage;
 import andrew.cinema.cinema.Menu.Settings;
 import andrew.cinema.cinema.Menu.about_account;
 import andrew.cinema.cinema.Menu.bonuses;
 import andrew.cinema.cinema.Menu.buyed_tickets;
 import andrew.cinema.cinema.Menu.gift_for_dob;
 import andrew.cinema.cinema.Repos.FilmRepos;
-import lombok.val;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

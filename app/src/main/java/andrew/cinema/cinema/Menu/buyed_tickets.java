@@ -2,10 +2,8 @@ package andrew.cinema.cinema.Menu;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -18,19 +16,13 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
-import com.google.zxing.BarcodeFormat;
-import com.google.zxing.MultiFormatWriter;
 import com.google.zxing.WriterException;
-import com.google.zxing.common.BitMatrix;
-import com.google.zxing.qrcode.encoder.QRCode;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -38,12 +30,13 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import andrew.cinema.cinema.Entities.Storage;
+import andrew.cinema.cinema.Utils.Storage;
 import andrew.cinema.cinema.Entities.Tickets;
-import andrew.cinema.cinema.Film_Pick;
+import andrew.cinema.cinema.Activities.Film_Pick;
 import andrew.cinema.cinema.R;
 import andrew.cinema.cinema.Repos.AccountRepos;
 import andrew.cinema.cinema.Repos.TicketRepos;
+import andrew.cinema.cinema.Utils.Util;
 import lombok.SneakyThrows;
 import lombok.val;
 import retrofit2.Call;
@@ -212,7 +205,7 @@ public class buyed_tickets extends AppCompatActivity {
         item2.removeAllViews();
         item2.setLayoutParams(new LinearLayout.LayoutParams((int)(height*0.23),(int)(height*0.23)));
         ImageView img = new ImageView(getApplicationContext());
-        final val qr= Storage.TextToImageEncode("Row:"+tk.getRow()+". Place:"+tk.getPlace()+"."+"User id:"+tk.getIdaccount()+". Price:"+tk.getPrice(), QRcodeWidth);
+        final val qr= Util.TextToImageEncode("Row:"+tk.getRow()+". Place:"+tk.getPlace()+"."+"User id:"+tk.getIdaccount()+". Price:"+tk.getPrice(), QRcodeWidth);
         img.setLayoutParams(new LinearLayout.LayoutParams((int)(height*0.2),(int)(height*0.2)));
         img.setImageBitmap(qr);
 

@@ -3,9 +3,6 @@ package andrew.cinema.cinema.Repos;
 import java.util.List;
 
 import andrew.cinema.cinema.Entities.Review;
-import andrew.cinema.cinema.Feedback;
-import lombok.Getter;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;

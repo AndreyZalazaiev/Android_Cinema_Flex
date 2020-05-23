@@ -1,4 +1,4 @@
-package andrew.cinema.cinema;
+package andrew.cinema.cinema.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -32,8 +32,8 @@ import java.util.List;
 import andrew.cinema.cinema.Entities.Film;
 import andrew.cinema.cinema.Entities.Halls;
 import andrew.cinema.cinema.Entities.Session;
-import andrew.cinema.cinema.Entities.Storage;
-import andrew.cinema.cinema.Menu.about_account;
+import andrew.cinema.cinema.R;
+import andrew.cinema.cinema.Utils.Storage;
 import andrew.cinema.cinema.Repos.HallRepos;
 import andrew.cinema.cinema.Repos.SessionRepos;
 import lombok.SneakyThrows;
@@ -158,10 +158,10 @@ public class session_pick extends AppCompatActivity {
                         scrollSessionContainer.removeAllViews();
                         for (final Session sn : SessionByDate(ss, dt)
                         ) {
-                            String strStart = sn.getStart();
+                            final String strStart = sn.getStart();
                             String strEnd = sn.getEnd();
-                            TextView dateStart = new TextView(getApplicationContext());
-                            TextView dateEnd = new TextView(getApplicationContext());
+                            final TextView dateStart = new TextView(getApplicationContext());
+                            final TextView dateEnd = new TextView(getApplicationContext());
                             TextView hallName= new TextView(getApplicationContext());
 
                             dateStart.setTextColor(Color.BLACK);
@@ -197,6 +197,7 @@ public class session_pick extends AppCompatActivity {
                                     intent.putExtra("idsession",""+sn.getIdsession());
                                     intent.putExtra("baseprice",""+sn.getBaseprice());
                                     intent.putExtra("type",""+getHallBySession(sn).getType());
+                                    intent.putExtra("date",""+sn.getStart());
                                     startActivity(intent);
                                     finish();
                                 }
@@ -252,6 +253,7 @@ public class session_pick extends AppCompatActivity {
                         intent.putExtra("idsession",""+sn.getIdsession());
                         intent.putExtra("type",""+getHallBySession(sn).getType());
                         intent.putExtra("baseprice",""+sn.getBaseprice());
+                        intent.putExtra("date",""+sn.getStart());
                         startActivity(intent);
                         finish();
                     }

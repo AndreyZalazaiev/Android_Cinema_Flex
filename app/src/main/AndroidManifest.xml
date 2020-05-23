@@ -15,6 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".Activities.Order_Details"></activity>
         <activity android:name=".Menu.Settings" />
         <activity
             android:name=".Menu.about_account"
@@ -33,7 +34,7 @@
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".Start"
+            android:name=".Activities.Start"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
@@ -43,30 +44,30 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Film_Pick"
+            android:name=".Activities.Film_Pick"
             android:background="@drawable/activity_background"
             android:label="@string/title_activity_film__pick"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".session_pick"
+            android:name=".Activities.session_pick"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".feedbackWR"
+            android:name=".Activities.feedbackWR"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".film_page"
+            android:name=".Activities.film_page"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".google_sign"
+            android:name=".Activities.google_sign"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".Authentication"
+            android:name=".Activities.Authentication"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity">
@@ -75,14 +76,14 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Place_Picker"
+            android:name=".Activities.Place_Picker"
             android:label="Выбор мест">
             <intent-filter>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".Activities.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar"
             tools:ignore="LockedOrientationActivity">
@@ -91,7 +92,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Cinema_Pick"
+            android:name=".Activities.Cinema_Pick"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
@@ -99,7 +100,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Feedback"
+            android:name=".Activities.Feedback"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>

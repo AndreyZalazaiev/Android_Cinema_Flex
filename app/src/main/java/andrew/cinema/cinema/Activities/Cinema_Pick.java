@@ -1,4 +1,4 @@
-package andrew.cinema.cinema;
+package andrew.cinema.cinema.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,7 +16,8 @@ import java.util.List;
 
 
 import andrew.cinema.cinema.Entities.Cinema;
-import andrew.cinema.cinema.Entities.Storage;
+import andrew.cinema.cinema.R;
+import andrew.cinema.cinema.Utils.Storage;
 import andrew.cinema.cinema.Repos.CinemaRepos;
 import lombok.SneakyThrows;
 import lombok.val;

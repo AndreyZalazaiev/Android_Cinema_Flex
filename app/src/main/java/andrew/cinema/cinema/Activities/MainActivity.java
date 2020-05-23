@@ -1,4 +1,4 @@
-package andrew.cinema.cinema;
+package andrew.cinema.cinema.Activities;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,6 +8,7 @@ import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.navigation.ui.AppBarConfiguration;
 
+import andrew.cinema.cinema.R;
 import lombok.SneakyThrows;
 
 public class MainActivity extends AppCompatActivity     {

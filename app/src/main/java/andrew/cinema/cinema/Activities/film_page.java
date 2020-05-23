@@ -1,4 +1,4 @@
-package andrew.cinema.cinema;
+package andrew.cinema.cinema.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
 import android.net.Uri;
 import android.os.Bundle;
@@ -27,11 +26,9 @@ import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 
-import andrew.cinema.cinema.Entities.Account;
 import andrew.cinema.cinema.Entities.Film;
-import andrew.cinema.cinema.Entities.Storage;
-import andrew.cinema.cinema.Menu.about_account;
-import andrew.cinema.cinema.Repos.AccountRepos;
+import andrew.cinema.cinema.R;
+import andrew.cinema.cinema.Utils.Storage;
 import andrew.cinema.cinema.Repos.FilmRepos;
 import retrofit2.Call;
 import retrofit2.Callback;

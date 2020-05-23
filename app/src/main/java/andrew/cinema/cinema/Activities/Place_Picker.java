@@ -1,4 +1,4 @@
-package andrew.cinema.cinema;
+package andrew.cinema.cinema.Activities;
 
 import android.annotation.SuppressLint;
 import android.content.DialogInterface;
@@ -21,47 +21,32 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
-import androidx.core.app.NotificationManagerCompat;
 
-import com.paypal.android.sdk.payments.PayPalConfiguration;
-import com.paypal.android.sdk.payments.PayPalPayment;
 import com.paypal.android.sdk.payments.PayPalService;
-import com.paypal.android.sdk.payments.PaymentActivity;
-import com.paypal.android.sdk.payments.PaymentConfirmation;
 
-import org.androidannotations.annotations.FromHtml;
-
-import java.math.BigDecimal;
-import java.security.spec.DSAParameterSpec;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import andrew.cinema.cinema.Entities.Film;
-import andrew.cinema.cinema.Entities.Storage;
 import andrew.cinema.cinema.Entities.Ticket;
+import andrew.cinema.cinema.R;
 import andrew.cinema.cinema.Repos.TicketRepos;
-import lombok.SneakyThrows;
-import lombok.val;
+import andrew.cinema.cinema.Utils.Storage;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class Place_Picker extends AppCompatActivity {
+
+
     private String cinemaType;
     private int rows = 0;
     private List<Integer> places = new ArrayList<>();
     private int place = 1;
-    private static int PAYPAL_REQUEST_CODE = 7171;
-    private static PayPalConfiguration config = new PayPalConfiguration().environment(PayPalConfiguration.ENVIRONMENT_SANDBOX)
-            .clientId(Config.PAYPAL_CLIENT_ID);
     private Retrofit retrofit;
     private TicketRepos ticketApi;
     private List<Ticket> tickets;
@@ -157,13 +142,14 @@ public class Place_Picker extends AppCompatActivity {
                 FillRow(20, 0);
 
                 break;
-            default://что-то
+            default:
+                Log.v(null, "Wrong Hall");
         }
     }
 
     public void FillRow(int length, int skip)//Создание ряда
     {
-        LinearLayout container = (LinearLayout) findViewById(R.id.container4);
+        LinearLayout container = findViewById(R.id.container4);
         LinearLayout horizontal = new LinearLayout(Place_Picker.this);
         horizontal.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
         horizontal.setOrientation(LinearLayout.HORIZONTAL);
@@ -192,6 +178,7 @@ public class Place_Picker extends AppCompatActivity {
         number.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12);
         number.setBackground(getResources().getDrawable(R.drawable.btn_transparent));
         rowsContainer.addView(number);
+
         for (int i = 0; i < skip; ++i) {
             Button skpBtn = new Button(Place_Picker.this);
             skpBtn.setEnabled(false);
@@ -199,6 +186,7 @@ public class Place_Picker extends AppCompatActivity {
             container.addView(skpBtn, layoutParams);
 
         }
+
         for (int i = 0; i < count; i++) {
             Button btn = new Button(Place_Picker.this);
             btn.setId(rowNum * 100 + (i + 1));
@@ -227,7 +215,10 @@ public class Place_Picker extends AppCompatActivity {
                     Log.d("Place num:", "" + v.getId());
                     ChangeColor(v.getId());
                     TextView total = findViewById(R.id.total);
-                    total.setText("Total price: " + places.size() * baseprice + "\n");
+                    if (places.size() == 0)
+                        total.setText("");
+                    else
+                        total.setText("Total price: " + places.size() * baseprice + "\n");
                     total.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
                     total.setTextColor(Color.BLACK);
                 }
@@ -238,9 +229,9 @@ public class Place_Picker extends AppCompatActivity {
 
     public void ChangeColor(int id)//Меняет цвет после нажатия на кнопку с местом и записывает в List places
     {
-        Button btn = (Button) findViewById(id);
+        Button btn = findViewById(id);
         if (places.contains(id)) {
-            places.remove(places.indexOf(id));
+            places.remove((Integer) id);
             btn.setBackground(getResources().getDrawable(R.drawable.btn_background));
         } else {
             places.add(id);
@@ -305,106 +296,41 @@ public class Place_Picker extends AppCompatActivity {
         return 0;//не куплен
     }
 
-    @Override
-    protected void onDestroy() {
-        stopService(new Intent(this, PayPalService.class));
-        super.onDestroy();
-    }
+
 
     public void onBuy(View v) {
-        if(places.size()!=0) {
-            ProcessPayment(places.size() * baseprice * 1.0);
-        }
-        else {
+        if (places.size() != 0) {
+
+            Intent intent = new Intent(this, Order_Details.class);
+            String row = "";
+            String place = "";
+            for (int i = 0; i < places.size(); i++) {
+                if (i != places.size() - 1) {
+                    place += (places.get(i) % 100) + ",";
+                    row += ((places.get(i) - places.get(i) % 100) / 100) + ",";
+                } else {
+                    place += (places.get(i) % 100);
+                    row += ((places.get(i) - places.get(i) % 100) / 100);
+                }
+            }
+            intent.putExtra("rows", row);
+            intent.putExtra("places", place);
+            intent.putExtra("baseprice", "" + baseprice);
+            intent.putExtra("idsession", "" + idsession);
+            Film cur = Storage.getFilmById(Integer.parseInt(getIntent().getStringExtra("idfilm")));
+            intent.putExtra("filmName", "" + cur.getName());
+            intent.putExtra("idfilm", "" + cur.getIdfilm());
+            intent.putExtra("type", getIntent().getStringExtra("type"));
+            intent.putExtra("date", getIntent().getStringExtra("date"));
+            startActivity(intent);
+            finish();
+
+        } else {
             Toast.makeText(this, "Pick at least one place", Toast.LENGTH_SHORT).show();
         }
     }//при нажатии кнопки купить
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == PAYPAL_REQUEST_CODE) {
-            if (resultCode == RESULT_OK) {
-                PaymentConfirmation confirmation = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
-                if (confirmation != null) {
-                    String row = "";
-                    String place = "";
-                    for (int i = 0; i < places.size(); i++) {
-                        if (i != places.size() - 1) {
-                            place += (places.get(i) % 100) + ",";
-                            row += ((places.get(i) - places.get(i) % 100) / 100) + ",";
-                        } else {
-                            place += (places.get(i) % 100);
-                            row += ((places.get(i) - places.get(i) % 100) / 100);
-                        }
-                    }
-                    SendNotification("Pepega");
-                    AddManyTickets(row, place);
-                } else if(resultCode==PaymentActivity.RESULT_CANCELED) {
-                    Toast.makeText(this, "Cancel", Toast.LENGTH_SHORT).show();
-                }
-                else if (resultCode == PaymentActivity.RESULT_EXTRAS_INVALID) {
-                    Toast.makeText(this, "Cancel", Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        }
-    }
-    public void AddManyTickets(String row, String place)
-    {
-        String [] temp = row.split(",");
-        StringBuilder sb = new StringBuilder();
-        int bonus=0;
-        for(int i =0 ;i<temp.length;i++)
-        {
-            bonus+=Storage.CalculateBonuses(baseprice);
-            if(i!=temp.length-1) {
-                sb.append(baseprice);
-                sb.append(",");
-            }
-            else
-            sb.append(baseprice);//Заглушка для цены//поменять
-        }
-        Storage.bonus+=bonus;
-        retrofit = new Retrofit.Builder()
-                .baseUrl("https://restapicinema.herokuapp.com")
-                .addConverterFactory(ScalarsConverterFactory.create())
-                .build();
-        ticketApi = retrofit.create(TicketRepos.class);
-        ticketApi.addTickets(Storage.idaccount,idsession,sb.toString(),place,row,bonus,sent)
-                .enqueue(new Callback<String>() {
-                    @SneakyThrows
-                    @Override
-                    public void onResponse(Call<String> call, Response<String> response) {
-                        Log.w("Tickets result:", "Works");
-                        int a =3;
-                    }
-
-                    @Override
-                    public void onFailure(Call<String> call, Throwable t) {
-                        Log.w("Tickets result:", "need registration");
-                    }
-                });
-        Intent intent = new Intent(Place_Picker.this, session_pick.class);
-        intent.putExtra("idfilm", getIntent().getStringExtra("idfilm"));
-        startActivity(intent);
-        finish();
-    }
-    public void SendNotification(String ChannelId)
-    {
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, ChannelId)
-                .setSmallIcon(R.drawable.ic_local_activity_black_24dp)
-                .setContentTitle("Поздравляем с покупкой")
-                .setWhen(new Date().getTime()+100000)
-                .setContentText("Проверьте биллеты в приложении!")
-                .setStyle(new NotificationCompat.BigTextStyle()
-                        .bigText(":)"))
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify(1, builder.build());
-    }
-    public void onLegendClick(View v)
-    {
+    public void onLegendClick(View v) {
         ImageView image = new ImageView(this);
         image.setImageResource(R.drawable.legend);
 
@@ -420,12 +346,5 @@ public class Place_Picker extends AppCompatActivity {
                         setView(image);
         builder.create().show();
     }
-    void ProcessPayment(Double price)
-    {
-        PayPalPayment payPalPayment= new PayPalPayment(new BigDecimal(price),"USD","Pay for tickets:",PayPalPayment.PAYMENT_INTENT_SALE);
-        Intent intent = new Intent(this, PaymentActivity.class);
-        intent.putExtra(PayPalService.EXTRA_PAYPAL_CONFIGURATION,config);
-        intent.putExtra(PaymentActivity.EXTRA_PAYMENT,payPalPayment);
-        startActivityForResult(intent,PAYPAL_REQUEST_CODE);
-    }
+
 }

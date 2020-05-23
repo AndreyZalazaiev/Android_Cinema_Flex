@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/nav_home"
-        android:name="andrew.cinema.cinema.ui.home.HomeFragment"
+        android:name="andrew.cinema.cinema.UI.home.HomeFragment"
         android:label="@string/menu_home"
         tools:layout="@layout/fragment_home">
 
@@ -20,7 +20,7 @@
     </fragment>
     <fragment
         android:id="@+id/nav_home_second"
-        android:name="andrew.cinema.cinema.ui.home.HomeSecondFragment"
+        android:name="andrew.cinema.cinema.UI.home.HomeSecondFragment"
         android:label="@string/home_second"
         tools:layout="@layout/fragment_home_second">
         <action
@@ -34,17 +34,17 @@
 
     <fragment
         android:id="@+id/nav_gallery"
-        android:name="andrew.cinema.cinema.ui.gallery.GalleryFragment"
+        android:name="andrew.cinema.cinema.UI.gallery.GalleryFragment"
         android:label="@string/menu_gallery"
         tools:layout="@layout/fragment_gallery" />
 
     <fragment
         android:id="@+id/nav_slideshow"
-        android:name="andrew.cinema.cinema.ui.slideshow.SlideshowFragment"
+        android:name="andrew.cinema.cinema.UI.slideshow.SlideshowFragment"
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
     <activity
         android:id="@+id/cinema_Pick3"
-        android:name="andrew.cinema.cinema.Cinema_Pick"
+        android:name="andrew.cinema.cinema.Activities.Cinema_Pick"
         android:label="Cinema_Pick" />
 </navigation>

@@ -1,26 +1,16 @@
-package andrew.cinema.cinema;
+package andrew.cinema.cinema.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.text.Html;
 import android.util.Log;
-import android.view.View;
-import android.widget.LinearLayout;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import java.text.DecimalFormat;
-import java.util.List;
 
 import andrew.cinema.cinema.Entities.Account;
-import andrew.cinema.cinema.Entities.Film;
-import andrew.cinema.cinema.Entities.Storage;
+import andrew.cinema.cinema.R;
+import andrew.cinema.cinema.Utils.Storage;
 import andrew.cinema.cinema.Repos.AccountRepos;
-import lombok.val;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;

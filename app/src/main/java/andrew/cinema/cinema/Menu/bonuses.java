@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import andrew.cinema.cinema.Entities.Storage;
-import andrew.cinema.cinema.Film_Pick;
+import andrew.cinema.cinema.Utils.Storage;
+import andrew.cinema.cinema.Activities.Film_Pick;
 import andrew.cinema.cinema.R;
 import lombok.val;
 

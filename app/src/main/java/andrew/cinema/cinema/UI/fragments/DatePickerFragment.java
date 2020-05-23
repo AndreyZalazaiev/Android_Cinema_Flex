@@ -1,4 +1,4 @@
-package andrew.cinema.cinema.ui.fragments;
+package andrew.cinema.cinema.UI.fragments;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
