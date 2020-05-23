@@ -27,6 +27,7 @@ import andrew.cinema.cinema.Activities.Film_Pick;
 import andrew.cinema.cinema.R;
 import andrew.cinema.cinema.Repos.AccountRepos;
 import andrew.cinema.cinema.UI.fragments.DatePickerFragment;
+import andrew.cinema.cinema.Utils.Util;
 import lombok.SneakyThrows;
 import lombok.val;
 import retrofit2.Call;
@@ -63,7 +64,7 @@ public class gift_for_dob extends AppCompatActivity implements DatePickerDialog.
         if (Storage.doB == null) {
             DateUnPickedUI();
         } else {
-            if (isBirthday()) {
+            if (Util.isBirthday()) {
                 getGiftstatus(Storage.idaccount, true);
             } else {//Non birthday
                 getGiftstatus(Storage.idaccount, false);
@@ -242,17 +243,7 @@ public class gift_for_dob extends AppCompatActivity implements DatePickerDialog.
         finish();
     }
 
-    public boolean isBirthday()  {
 
-        Date now = new Date();
-        Integer day = now.getDate();
-        Integer month = now.getMonth();
-        String date = Storage.doB;
-        String[] temp = date.split("T");
-        String[] curent = temp[0].split("-");
-        return Integer.parseInt(curent[1]) == (month + 1) && Integer.parseInt(curent[2]) == day;
-
-    }
 
     void updateDate(final String id, final String dob) {
         retrofit = new Retrofit.Builder()
