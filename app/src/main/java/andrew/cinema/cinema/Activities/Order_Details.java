@@ -188,13 +188,13 @@ public class Order_Details extends AppCompatActivity {
             HorizontalScrollView horizontal = new HorizontalScrollView(getApplicationContext());
             LinearLayout horizontalContainer = new LinearLayout(getApplicationContext());
             horizontal.addView(horizontalContainer);
-            horizontalContainer.addView(ticket);
-            
-            scrollContainer.addView(horizontal);
-            ticket.addView(info);
-            ticket.addView(price);
-            ticket.addView(discount);
-            ticket.addView(sw);
+
+            ticket.addView(horizontal);
+            scrollContainer.addView(ticket);
+            horizontalContainer.addView(info);
+            horizontalContainer.addView(price);
+            horizontalContainer.addView(discount);
+            horizontalContainer.addView(sw);
         }
 
 
