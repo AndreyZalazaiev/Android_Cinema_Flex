@@ -19,7 +19,8 @@ public interface TicketRepos {
                             @Query("place")String place,
                             @Query("row")String rownum,
                             @Query("bonus")Integer bonuse,
-                            @Query("sent") Integer sent
+                            @Query("sent") Integer sent,
+                            @Query("reserve") Integer reserve
                             );
     @GET("tickets/this")
     Call<List<Ticket>> getTickets(@Query("idsession") Integer id);

@@ -31,6 +31,7 @@ import com.paypal.android.sdk.payments.PaymentActivity;
 import com.paypal.android.sdk.payments.PaymentConfirmation;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -74,14 +75,17 @@ public class Order_Details extends AppCompatActivity {
     private int height;
     private boolean night = false;
     private int TEXT_COLOR = Color.BLACK;
+    private Date formLaucnh;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         settings();
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order__details);
+        formLaucnh= new Date();
         init();
         Draw();
+        AddManyTickets(rowsStr, placesStr, 0,1);
     }
 
     public void Draw() {
@@ -260,7 +264,7 @@ public class Order_Details extends AppCompatActivity {
                 PaymentConfirmation confirmation = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
                 if (confirmation != null) {
                     SendNotification("Pepega");
-                    AddManyTickets(rowsStr, placesStr, Storage.CalculateBonuses(baseprice) * (prices.size() - bonusItemes));
+                    AddManyTickets(rowsStr, placesStr, Storage.CalculateBonuses(baseprice) * (prices.size() - bonusItemes),0);
 
                     if (!Util.isBirthday())
                         setIsResived(Storage.idaccount);
@@ -273,7 +277,7 @@ public class Order_Details extends AppCompatActivity {
         }
     }
 
-    public void AddManyTickets(String row, String place, int bonus) {
+    public void AddManyTickets(String row, String place, int bonus, final int reserve) {
         StringBuilder sb = new StringBuilder();
         for (Double p : prices
         ) {
@@ -285,7 +289,7 @@ public class Order_Details extends AppCompatActivity {
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .build();
         ticketApi = retrofit.create(TicketRepos.class);
-        ticketApi.addTickets(Storage.idaccount, idsession, sb.toString().substring(0, sb.length() - 1), place, row, bonus, sent)
+        ticketApi.addTickets(Storage.idaccount, idsession, sb.toString().substring(0, sb.length() - 1), place, row, bonus, sent,reserve)
                 .enqueue(new Callback<String>() {
                     @SneakyThrows
                     @Override
@@ -299,9 +303,11 @@ public class Order_Details extends AppCompatActivity {
                         Log.w("Tickets result:", "need registration");
                     }
                 });
-        Intent intent = new Intent(Order_Details.this, Film_Pick.class);
-        startActivity(intent);
-        finish();
+        if(reserve==0) {
+            Intent intent = new Intent(Order_Details.this, Film_Pick.class);
+            startActivity(intent);
+            finish();
+        }
     }
 
     public void SendNotification(String ChannelId) {
@@ -352,8 +358,24 @@ public class Order_Details extends AppCompatActivity {
     }
 
     public void onPayClick(View v) {
-        if (totalBonuses <= Storage.bonus)
-            ProcessPayment(totalPrice);
+        if (totalBonuses <= Storage.bonus) {
+            Date cur = new Date();
+            if (formLaucnh.getTime()+900000<cur.getTime())//15 min
+            {
+                Toast.makeText(getApplicationContext(), "Reservation time is over,please select places again", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(Order_Details.this, Place_Picker.class);
+                intent.putExtra("idsession", "" + idsession);
+                intent.putExtra("baseprice", "" + baseprice);
+                intent.putExtra("idfilm", getIntent().getStringExtra("idfilm"));
+                intent.putExtra("type", type);
+                intent.putExtra("date", date);
+
+                startActivity(intent);
+                finish();
+            }
+            else
+                ProcessPayment(totalPrice);
+        }
         else
             Toast.makeText(getApplicationContext(), "Not enough bonuses", Toast.LENGTH_SHORT).show();
     }
