@@ -134,7 +134,7 @@ public class Order_Details extends AppCompatActivity {
             TextView info = new TextView(getApplicationContext());
             info.setTextColor(Color.BLACK);
             info.setLayoutParams(marg);
-            info.setText(Html.fromHtml("Row: " + rows[i] + "<br/>Place: " + places[i]));
+            info.setText(Html.fromHtml("Row: " + Util.stringFormat(rows[i]) + "<br/>Place: " + Util.stringFormat(places[i])));
             final TextView price = new TextView(getApplicationContext());
             price.setTextColor(Color.BLACK);
             price.setLayoutParams(marg);

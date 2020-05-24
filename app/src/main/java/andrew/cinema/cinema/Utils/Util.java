@@ -17,8 +17,8 @@ public class Util {
         try {
             bitMatrix = new MultiFormatWriter().encode(
                     Value,
-                    BarcodeFormat.DATA_MATRIX.QR_CODE,
-                    QRcodeWidth,  QRcodeWidth,null
+                    BarcodeFormat.QR_CODE,
+                    QRcodeWidth, QRcodeWidth, null
             );
 
         } catch (IllegalArgumentException Illegalargumentexception) {
@@ -37,15 +37,16 @@ public class Util {
             for (int x = 0; x < bitMatrixWidth; x++) {
 
                 pixels[offset + x] = bitMatrix.get(x, y) ?
-                        Color.BLACK :Color.WHITE;
+                        Color.BLACK : Color.WHITE;
             }
         }
         Bitmap bitmap = Bitmap.createBitmap(bitMatrixWidth, bitMatrixHeight, Bitmap.Config.ARGB_4444);
 
-        bitmap.setPixels(pixels, 0, (int)(QRcodeWidth), 0, 0, bitMatrixWidth, bitMatrixHeight);
+        bitmap.setPixels(pixels, 0, QRcodeWidth, 0, 0, bitMatrixWidth, bitMatrixHeight);
 
         return bitmap;
     }
+
     public static boolean isBirthday() {
         if (Storage.doB != null) {
             Date now = new Date();
@@ -56,5 +57,20 @@ public class Util {
             String[] curent = temp[0].split("-");
             return Integer.parseInt(curent[1]) == (month + 1) && Integer.parseInt(curent[2]) == day;
         } else return false;
+    }
+
+    public static String stringFormat(String input) {
+        int a = 0;
+        try {
+            a = Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+
+        if (a < 10) {
+            return a + " ";
+        } else if (a < 100) {
+            return a + "  ";
+        } else return a + "";
     }
 }
