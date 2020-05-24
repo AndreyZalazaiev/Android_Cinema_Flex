@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.Switch;
@@ -23,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.widget.NestedScrollView;
 
 import com.paypal.android.sdk.payments.PayPalConfiguration;
 import com.paypal.android.sdk.payments.PayPalPayment;
@@ -91,19 +93,27 @@ public class Order_Details extends AppCompatActivity {
     public void Draw() {
         LinearLayout main = findViewById(R.id.Main);
         final TextView filmDesc = new TextView(getApplicationContext());
-        ScrollView sc = new ScrollView(getApplicationContext());
+        NestedScrollView nsc = new NestedScrollView(getApplicationContext());
         LinearLayout scrollContainer = new LinearLayout(getApplicationContext());
         LinearLayout container = new LinearLayout(getApplicationContext());
+
+        LinearLayout descTopContainer = new LinearLayout(getApplicationContext());
+        ScrollView scDesc = new ScrollView(getApplicationContext());
+        LinearLayout descContainer= new LinearLayout(getApplicationContext());
+        descTopContainer.addView(scDesc);
+        descContainer.addView(filmDesc);
+        scDesc.addView(descContainer);
+
         final String[] dateParse = date.split("T");
 
-        sc.addView(scrollContainer);
-        main.addView(filmDesc);
-        container.addView(sc);
+        nsc.addView(scrollContainer);
+        main.addView(descTopContainer);
+        container.addView(nsc);
         main.addView(container);
 
 
         container.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (height * 0.54)));
-        filmDesc.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (height * 0.25)));
+        descTopContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (height * 0.25)));
 
         scrollContainer.setOrientation(LinearLayout.VERTICAL);
         String[] places = placesStr.split(",");
@@ -175,12 +185,19 @@ public class Order_Details extends AppCompatActivity {
                     }
                 }
             });
-            scrollContainer.addView(ticket);
+            HorizontalScrollView horizontal = new HorizontalScrollView(getApplicationContext());
+            LinearLayout horizontalContainer = new LinearLayout(getApplicationContext());
+            horizontal.addView(horizontalContainer);
+            horizontalContainer.addView(ticket);
+            
+            scrollContainer.addView(horizontal);
             ticket.addView(info);
             ticket.addView(price);
             ticket.addView(discount);
             ticket.addView(sw);
         }
+
+
         filmDesc.setTextSize(TEXT_SIZE);
         filmDesc.setText(Html.fromHtml("<b>" + filmName + "</b><br/>Date: "
                 + dateParse[0]
