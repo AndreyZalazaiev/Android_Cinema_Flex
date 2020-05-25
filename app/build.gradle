@@ -23,6 +23,7 @@ android {
 
 }
 dependencies {
+    compile 'com.github.justzak:dilatingdotsprogressbar:1.0.1'
     implementation 'com.paypal.sdk:paypal-android-sdk:2.15.3'
     implementation 'com.google.firebase:firebase-inappmessaging-display:19.0.5'
     implementation 'com.google.firebase:firebase-analytics:17.3.0'

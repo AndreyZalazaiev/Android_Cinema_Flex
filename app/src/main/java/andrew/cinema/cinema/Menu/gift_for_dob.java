@@ -94,7 +94,7 @@ public class gift_for_dob extends AppCompatActivity implements DatePickerDialog.
         LinearLayout ln = findViewById(R.id.main);
         ln.setLayoutParams(new LinearLayout.LayoutParams((int) (width * 0.9), (int) (height * 0.85)));
         ln.setBackgroundResource(R.drawable.films_drawable_back);
-        ln.setPadding(120, 60, 0, 0);
+        ln.setPadding(60, 60, 60, 0);
         ln.setOrientation(LinearLayout.VERTICAL);
         ln.addView(p1);
         ln.addView(tv);
@@ -151,7 +151,7 @@ public class gift_for_dob extends AppCompatActivity implements DatePickerDialog.
         LinearLayout ln = findViewById(R.id.main);
         ln.setLayoutParams(new LinearLayout.LayoutParams((int) (width * 0.9), (int) (height * 0.85)));
         ln.setBackgroundResource(R.drawable.films_drawable_back);
-        ln.setPadding(120, 60, 0, 0);
+        ln.setPadding(60, 60, 60, 0);
         ln.setOrientation(LinearLayout.VERTICAL);
         ln.addView(p1);
         ln.addView(tv);
@@ -186,7 +186,7 @@ public class gift_for_dob extends AppCompatActivity implements DatePickerDialog.
         LinearLayout ln = findViewById(R.id.main);
         ln.setLayoutParams(new LinearLayout.LayoutParams((int) (width * 0.9), (int) (height * 0.85)));
         ln.setBackgroundResource(R.drawable.films_drawable_back);
-        ln.setPadding(120, 60, 0, 0);
+        ln.setPadding(60, 60, 60, 0);
         ln.setOrientation(LinearLayout.VERTICAL);
         ln.addView(tv);
         ln.addView(btn);

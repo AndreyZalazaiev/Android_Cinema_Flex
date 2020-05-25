@@ -128,7 +128,9 @@ public class Order_Details extends AppCompatActivity {
 
             LinearLayout ticket = new LinearLayout(getApplicationContext());
             ticket.setPadding(50, 50, 50, 50);
-            ticket.setBackgroundResource(R.drawable.films_drawable_back);
+            if(night)
+                ticket.setBackgroundResource(R.drawable.films_drawable_back);
+            else ticket.setBackgroundResource(R.drawable.background_gray);
             ticket.setLayoutParams(margTickets);
             ticket.setOrientation(LinearLayout.HORIZONTAL);
             TextView info = new TextView(getApplicationContext());
@@ -145,6 +147,7 @@ public class Order_Details extends AppCompatActivity {
             discount.setLayoutParams(marg);
             discount.setText("Get discount 50%\nfor " + (int) (baseprice * BONUSES_CONST) + " bonuses:");
             Switch sw = new Switch(getApplicationContext());
+            sw.setBackgroundResource(R.drawable.btn_background_buyed);
             sw.setChecked(false);
             final int finalI = i;
             sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -196,9 +199,8 @@ public class Order_Details extends AppCompatActivity {
             horizontalContainer.addView(discount);
             horizontalContainer.addView(sw);
         }
-
-
         filmDesc.setTextSize(TEXT_SIZE);
+        filmDesc.setPadding(25,0,0,0);
         filmDesc.setText(Html.fromHtml("<b>" + filmName + "</b><br/>Date: "
                 + dateParse[0]
                 + "<br/>Time: "

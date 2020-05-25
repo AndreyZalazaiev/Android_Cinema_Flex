@@ -8,6 +8,7 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
+
     <HorizontalScrollView
         android:id="@+id/hsv"
         android:layout_width="wrap_content"

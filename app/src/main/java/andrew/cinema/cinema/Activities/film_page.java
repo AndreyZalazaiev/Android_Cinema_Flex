@@ -1,7 +1,5 @@
 package andrew.cinema.cinema.Activities;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -24,12 +22,14 @@ import android.widget.LinearLayout;
 import android.widget.RatingBar;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.squareup.picasso.Picasso;
 
 import andrew.cinema.cinema.Entities.Film;
 import andrew.cinema.cinema.R;
-import andrew.cinema.cinema.Utils.Storage;
 import andrew.cinema.cinema.Repos.FilmRepos;
+import andrew.cinema.cinema.Utils.Storage;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,18 +40,18 @@ public class film_page extends AppCompatActivity {
     public static int TEXT_COLOR = Color.BLACK;
     private Retrofit retrofit;
     private FilmRepos filmApi;
-    private Boolean night =false;
+    private Boolean night = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences sPref;
         sPref = getSharedPreferences("MyPref", MODE_PRIVATE);
         String mode = sPref.getString("DayNightMode", "true");
-        TEXT_COLOR=Color.BLACK;
-        if(mode.equals("true")) {
+        TEXT_COLOR = Color.BLACK;
+        if (mode.equals("true")) {
             setTheme(R.style.Theme_AppCompat);
-            night=true;
-            TEXT_COLOR=Color.WHITE;
+            night = true;
+            TEXT_COLOR = Color.WHITE;
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_film_page);
@@ -62,8 +62,8 @@ public class film_page extends AppCompatActivity {
     }
 
     public void DrawPage() {
-        final Animation anim = AnimationUtils.loadAnimation(film_page.this,R.anim.zoomin);
-        final Animation animRev = AnimationUtils.loadAnimation(film_page.this,R.anim.zoomout);
+        final Animation anim = AnimationUtils.loadAnimation(film_page.this, R.anim.zoomin);
+        final Animation animRev = AnimationUtils.loadAnimation(film_page.this, R.anim.zoomout);
 
         Display display = getWindowManager().getDefaultDisplay();
         int width = display.getWidth();
@@ -76,11 +76,11 @@ public class film_page extends AppCompatActivity {
         img.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(currentFilm.getTrailer()!=null)
-                if(currentFilm.getTrailer().length()>10) {
-                    Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(currentFilm.getTrailer()));
-                    startActivity(browserIntent);
-                }
+                if (currentFilm.getTrailer() != null)
+                    if (currentFilm.getTrailer().length() > 10) {
+                        Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(currentFilm.getTrailer()));
+                        startActivity(browserIntent);
+                    }
             }
         });
         double size = 1.5;
@@ -102,27 +102,27 @@ public class film_page extends AppCompatActivity {
         img.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
-
-                    img.startAnimation(animRev);
+                img.startAnimation(animRev);
                 return false;
             }
         });
 
         TextView title = new TextView(getApplicationContext());
-        title.setText(Html.fromHtml("<b>"+currentFilm.getName()+"</b>"));
+        title.setText(Html.fromHtml("<b>" + currentFilm.getName() + "</b>"));
         title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 32);
-        title.setTextAlignment(container.TEXT_ALIGNMENT_CENTER);
+        title.setTextAlignment(View.TEXT_ALIGNMENT_CENTER);
         TextView setup = new TextView(getApplicationContext());
         setup.setText("Genre: " + currentFilm.getGenre() + "\n"
                 + "Age limitations: " + currentFilm.getAgeLimit());
         setup.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 28);
         TextView description = new TextView(getApplicationContext());
         description.setText("Description:\n " + currentFilm.getDescription() + "\n");
+        description.setPadding(0,0,0,50);
         description.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 23);
 
-            setup.setTextColor(TEXT_COLOR);
-            title.setTextColor(TEXT_COLOR);
-            description.setTextColor(TEXT_COLOR);
+        setup.setTextColor(TEXT_COLOR);
+        title.setTextColor(TEXT_COLOR);
+        description.setTextColor(TEXT_COLOR);
 
         getSupportActionBar().setTitle(currentFilm.getName());
         imgLay.addView(title);
@@ -131,6 +131,7 @@ public class film_page extends AppCompatActivity {
 
 
     }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -157,13 +158,14 @@ public class film_page extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-    public void ToSessionPick(View  v )
-    {
+
+    public void ToSessionPick(View v) {
         Intent intent = new Intent(film_page.this, session_pick.class);
-        intent.putExtra("idfilm",getIntent().getStringExtra("idfilm"));
+        intent.putExtra("idfilm", getIntent().getStringExtra("idfilm"));
         startActivity(intent);
         finish();
     }
+
     public void ToReviews(View view) {
 
         int idfilm = Integer.parseInt(getIntent().getStringExtra("idfilm"));
@@ -172,8 +174,8 @@ public class film_page extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-    void getRating(Integer id)
-    {
+
+    void getRating(Integer id) {
         retrofit = new Retrofit.Builder()
                 .baseUrl("https://restapicinema.herokuapp.com")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -183,7 +185,7 @@ public class film_page extends AppCompatActivity {
                 .enqueue(new Callback<String>() {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
-                        Log.w("Response result:","Works");
+                        Log.w("Response result:", "Works");
                         LinearLayout starsContainer = new LinearLayout(getApplicationContext());
                         starsContainer.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
@@ -198,9 +200,10 @@ public class film_page extends AppCompatActivity {
                         LinearLayout ln = findViewById(R.id.imageCont);
                         ln.addView(starsContainer);
                     }
+
                     @Override
-                    public void onFailure(Call<String>call, Throwable t) {
-                        Log.w("Response result:","need registration");
+                    public void onFailure(Call<String> call, Throwable t) {
+                        Log.w("Response result:", "need registration");
                     }
                 });
     }

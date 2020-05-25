@@ -24,7 +24,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.paypal.android.sdk.payments.PayPalService;
+import com.zl.reik.dilatingdotsprogressbar.DilatingDotsProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +43,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class Place_Picker extends AppCompatActivity {
 
 
+    public  int TEXT_COLOR = Color.BLACK;
     private String cinemaType;
     private int rows = 0;
     private List<Integer> places = new ArrayList<>();
@@ -71,6 +72,8 @@ public class Place_Picker extends AppCompatActivity {
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.place_picker);
+        DilatingDotsProgressBar mDilatingDotsProgressBar = (DilatingDotsProgressBar) findViewById(R.id.progress);
+        mDilatingDotsProgressBar.showNow();
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);//ошибки в мусорку ты свои перенаправь, user expirence - это не про нас
         Display display = getWindowManager().getDefaultDisplay();
         width = display.getWidth();
@@ -80,16 +83,18 @@ public class Place_Picker extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle("Pick places");
         LoadTickets(idsession);
+        mDilatingDotsProgressBar.hideNow();
     }
 
     public void setPlaces(String type) {
         Film current = Storage.getFilmById(Integer.parseInt(getIntent().getStringExtra("idfilm")));
         TextView tv = new TextView(getApplicationContext());
         tv.setTextSize(24);
-        tv.setTextColor(Color.BLACK);
+        tv.setTextColor(TEXT_COLOR);
         tv.setText(Html.fromHtml(current.getName() + "<br/> Type of Hall:" + type + "</br>"));
         LinearLayout ln = findViewById(R.id.Title);
         ln.setGravity(Gravity.TOP);
+
         ln.addView(tv);
 
         switch (type) {
@@ -170,7 +175,7 @@ public class Place_Picker extends AppCompatActivity {
         else
             number.setText("Ряд:" + rows);
         if (night) {
-            number.setTextColor(Color.BLACK);
+            number.setTextColor(TEXT_COLOR);
         }
         LinearLayout.LayoutParams rowParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, (int) (height * hallCoef));
         rowParam.setMargins(0, 20, 0, 20);
@@ -220,7 +225,7 @@ public class Place_Picker extends AppCompatActivity {
                     else
                         total.setText("Total price: " + places.size() * baseprice + "\n");
                     total.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
-                    total.setTextColor(Color.BLACK);
+                    total.setTextColor(TEXT_COLOR);
                 }
             });
             container.addView(btn, layoutParams);
@@ -332,7 +337,10 @@ public class Place_Picker extends AppCompatActivity {
 
     public void onLegendClick(View v) {
         ImageView image = new ImageView(this);
-        image.setImageResource(R.drawable.legend);
+        if(night)
+        image.setImageResource(R.drawable.night_legend);
+        else
+            image.setImageResource(R.drawable.legend);
 
         AlertDialog.Builder builder =
                 new AlertDialog.Builder(this).

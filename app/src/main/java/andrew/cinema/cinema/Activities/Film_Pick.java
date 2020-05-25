@@ -213,6 +213,15 @@ public class Film_Pick extends AppCompatActivity {
                 return false;
             }
         });
+        MenuItem nav_web = menu.findItem(R.id.nav_web);
+        nav_web.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://ci81503.tmweb.ru/"));
+                startActivity(browserIntent);
+                return false;
+            }
+        });
 
     }
 

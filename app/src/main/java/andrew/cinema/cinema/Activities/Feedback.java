@@ -115,6 +115,7 @@ public class Feedback extends AppCompatActivity {
         final Animation anim = AnimationUtils.loadAnimation(Feedback.this, R.anim.toptodown);
         FirstReview();//отзыв пользователя будет первым
         LinearLayout container = findViewById(R.id.Container);
+        container.setPadding(0,0,0,50);
         if (reviews.size() > 0) {
             for (Review rev : reviews
             ) {

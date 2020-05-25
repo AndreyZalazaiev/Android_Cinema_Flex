@@ -218,9 +218,14 @@ public class about_account extends AppCompatActivity {
         final int curBrightnessValue = android.provider.Settings.System.getInt(
                 getContentResolver(),
                 android.provider.Settings.System.SCREEN_BRIGHTNESS);
-        android.provider.Settings.System.putInt(getContentResolver(),
-                android.provider.Settings.System.SCREEN_BRIGHTNESS,
-                255);
+        try {
+            android.provider.Settings.System.putInt(getContentResolver(),
+                    android.provider.Settings.System.SCREEN_BRIGHTNESS,
+                    255);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         AlertDialog.Builder builder =
                 new AlertDialog.Builder(about_account.this).
                         setMessage("Scan the code").
@@ -228,17 +233,26 @@ public class about_account extends AppCompatActivity {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.dismiss();
-                                android.provider.Settings.System.putInt(getContentResolver(),
-                                        android.provider.Settings.System.SCREEN_BRIGHTNESS,
-                                        curBrightnessValue);
+                                try {
+                                    android.provider.Settings.System.putInt(getContentResolver(),
+                                            android.provider.Settings.System.SCREEN_BRIGHTNESS,
+                                            curBrightnessValue);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
                             }
                         })
                         .setOnCancelListener(new DialogInterface.OnCancelListener() {
                             @Override
                             public void onCancel(DialogInterface dialog) {
-                                android.provider.Settings.System.putInt(getContentResolver(),
-                                        android.provider.Settings.System.SCREEN_BRIGHTNESS,
-                                        curBrightnessValue);
+                                try {
+                                    android.provider.Settings.System.putInt(getContentResolver(),
+                                            android.provider.Settings.System.SCREEN_BRIGHTNESS,
+                                            curBrightnessValue);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
                             }
                         })
                         .setView(temp);

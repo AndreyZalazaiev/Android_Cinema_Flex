@@ -186,7 +186,9 @@ public class session_pick extends AppCompatActivity {
                             textContainer.addView(dateEnd);
                             textContainer.addView(hallName);
                             localContainer.addView(textContainer);
-                            localContainer.setBackgroundResource(R.drawable.films_drawable_back);
+                            if(night)
+                                localContainer.setBackgroundResource(R.drawable.films_drawable_back);
+                            else localContainer.setBackgroundResource(R.drawable.background_gray);
                             localContainer.setPadding(50,0,50,50);
                             localContainer.addView(img2);
                             localContainer.setOnClickListener(new View.OnClickListener() {
@@ -243,7 +245,9 @@ public class session_pick extends AppCompatActivity {
                 textContainer.addView(hallName);
                 localContainer.addView(textContainer);
                 localContainer.addView(img2);
+                if(night)
                 localContainer.setBackgroundResource(R.drawable.films_drawable_back);
+                else localContainer.setBackgroundResource(R.drawable.background_gray);
                 localContainer.setPadding(50,0,50,50);
                 localContainer.setOnClickListener(new View.OnClickListener() {
                     @Override

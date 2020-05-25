@@ -19,11 +19,14 @@
 
         <EditText
             android:id="@+id/text"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:inputType="textPersonName"
-            android:text="TextReview" />
+            android:inputType="textCapSentences|textMultiLine"
+            android:imeOptions="actionDone"
+            android:text="TextReview"
+            android:maxLines="7"
+            android:maxLength="250"/>
 
     </LinearLayout>
 
