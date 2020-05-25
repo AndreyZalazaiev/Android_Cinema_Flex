@@ -26,6 +26,7 @@ public class Settings extends AppCompatActivity {
         val sPref = getSharedPreferences("MyPref", MODE_PRIVATE);
         String mode = sPref.getString("DayNightMode", "true");
         String emails = sPref.getString("Sent", "1");
+        String soon = sPref.getString("Soon", "true");
         if(mode.equals("true")) {
             night=true;
             setTheme(R.style.Theme_AppCompat);
@@ -34,6 +35,15 @@ public class Settings extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         getSupportActionBar().setTitle("Settings");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        switchState(mode, emails,soon);
+        ExtraParams();
+        EmailsSetting();
+        DayNightMode();
+        Soon();
+    }
+
+    private void switchState(String mode, String emails,String soon) {
         if(mode.equals("true"))
         {
             Switch sw = findViewById(R.id.NightMode);
@@ -44,10 +54,11 @@ public class Settings extends AppCompatActivity {
             Switch em = findViewById(R.id.Emails);
             em.setChecked(true);
         }
-
-        ExtraParams();
-        EmailsSetting();
-        SetupSwitch();
+        if(soon.equals("true"))
+        {
+            Switch sn = findViewById(R.id.Soon);
+            sn.setChecked(true);
+        }
     }
 
     private void ExtraParams() {
@@ -90,7 +101,7 @@ public class Settings extends AppCompatActivity {
         });
     }
 
-    public void SetupSwitch() {
+    public void DayNightMode() {
         final Switch sw = findViewById(R.id.NightMode);
         sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -102,6 +113,23 @@ public class Settings extends AppCompatActivity {
                     editor.putString("DayNightMode", ""+isChecked);
                 } else {
                     editor.remove("DayNightMode");
+                }
+                editor.commit();
+            }
+        });
+    }
+    public void Soon() {
+        final Switch sw = findViewById(R.id.Soon);
+        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharedPreferences prefs = getApplication().getSharedPreferences("MyPref", MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+
+                if(!sw.isChecked()) {
+                    editor.putString("Soon", ""+isChecked);
+                } else {
+                    editor.remove("Soon");
                 }
                 editor.commit();
             }

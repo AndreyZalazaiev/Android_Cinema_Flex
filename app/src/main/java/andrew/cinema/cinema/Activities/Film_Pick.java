@@ -58,6 +58,7 @@ public class Film_Pick extends AppCompatActivity {
     private Retrofit retrofit;
     private AppBarConfiguration mAppBarConfiguration;
     private int width;
+    String soon;
     private int height;
 
     @Override
@@ -65,6 +66,7 @@ public class Film_Pick extends AppCompatActivity {
         SharedPreferences sPref;
         sPref = getSharedPreferences("MyPref", MODE_PRIVATE);
         String mode = sPref.getString("DayNightMode", "true");
+        soon= sPref.getString("Soon", "true");
         if (mode.equals("true"))
             setTheme(R.style.Theme_AppCompat_NoActionBar);
         super.onCreate(savedInstanceState);
@@ -77,8 +79,6 @@ public class Film_Pick extends AppCompatActivity {
         height -= getSupportActionBar().getHeight();
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         NavigationView navigationView = findViewById(R.id.nav_view);
-        // Passing each menu ID as a set of Ids because each
-        // menu should be considered as top level destinations.
         mAppBarConfiguration = new AppBarConfiguration.Builder(
                 R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow)
                 .setDrawerLayout(drawer)
@@ -86,7 +86,7 @@ public class Film_Pick extends AppCompatActivity {
         NavController navController = Navigation.findNavController(this, R.id.nav_host_fragment);
         NavigationUI.setupActionBarWithNavController(this, navController, mAppBarConfiguration);
         NavigationUI.setupWithNavController(navigationView, navController);
-        LoadFilm();
+        LoadFilms();
         FillMenu();
 
     }
@@ -239,12 +239,13 @@ public class Film_Pick extends AppCompatActivity {
                 || super.onSupportNavigateUp();
     }
 
-    public void LoadFilm() {
+    public void LoadFilms() {
         retrofit = new Retrofit.Builder()
                 .baseUrl("https://restapicinema.herokuapp.com") //Базовая часть адреса
                 .addConverterFactory(GsonConverterFactory.create()) //Конвертер, необходимый для преобразования JSON'а в объекты
                 .build();
         filmApi = retrofit.create(FilmRepos.class); //Создаем объект, при помощи которого будем выполнять запросы
+        if(soon.equals("true"))
         filmApi.getData().enqueue(new Callback<List<Film>>() {
             @Override
             public void onResponse(Call<List<Film>> call, Response<List<Film>> response) {
@@ -257,6 +258,19 @@ public class Film_Pick extends AppCompatActivity {
                 Log.v("Response result:", "Eror");
             }
         });
+        else
+            filmApi.getActual().enqueue(new Callback<List<Film>>() {
+                @Override
+                public void onResponse(Call<List<Film>> call, Response<List<Film>> response) {
+                    Log.v("Response result:", response.body().toString());
+                    DrawFilm(response.body());
+                }
+
+                @Override
+                public void onFailure(Call<List<Film>> call, Throwable t) {
+                    Log.v("Response result:", "Eror");
+                }
+            });
     }
 
     public void DrawFilm(List<Film> films) {
