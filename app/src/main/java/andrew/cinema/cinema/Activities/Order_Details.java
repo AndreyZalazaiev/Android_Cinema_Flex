@@ -379,6 +379,7 @@ public class Order_Details extends AppCompatActivity {
         super.onDestroy();
     }
 
+
     public void onPayClick(View v) {
         if (totalBonuses <= Storage.bonus) {
             Date cur = new Date();

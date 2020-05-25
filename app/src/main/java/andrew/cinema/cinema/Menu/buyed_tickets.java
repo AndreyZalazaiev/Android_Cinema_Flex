@@ -52,15 +52,17 @@ public class buyed_tickets extends AppCompatActivity {
     private AccountRepos accApi;
     private int height;
     private int width;
-    private int QRcodeWidth;
+    private int ticketHeight;
     private List<Tickets> tickets = new ArrayList<>();
     private boolean night = false;
+    String qrMode;
 
     @SneakyThrows
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         val sPref = getSharedPreferences("MyPref", MODE_PRIVATE);
         String mode = sPref.getString("DayNightMode", "true");
+        qrMode = sPref.getString("QR", "true");
         if (mode.equals("true")) {
             setTheme(R.style.Theme_AppCompat);
             night = true;
@@ -73,7 +75,7 @@ public class buyed_tickets extends AppCompatActivity {
         Display display = getWindowManager().getDefaultDisplay();
         width = display.getWidth();
         height = display.getHeight();
-        QRcodeWidth = (int) (width * 0.35);
+        ticketHeight = (int) (width * 0.35);
         LoadAllTickets(Storage.idaccount);
 
 
@@ -177,7 +179,7 @@ public class buyed_tickets extends AppCompatActivity {
     public void setupTicket(final LinearLayout item1, final LinearLayout item2, final LinearLayout items, final ImageView icon, final LinearLayout ticketContainer, final Tickets tk) {
         final Animation anim = AnimationUtils.loadAnimation(buyed_tickets.this, R.anim.toptodown);
 
-        item1.setLayoutParams(new LinearLayout.LayoutParams((int) (width * 0.95), QRcodeWidth + 50));
+        item1.setLayoutParams(new LinearLayout.LayoutParams((int) (width * 0.95), ticketHeight + 50));
         item1.setBackgroundResource(R.drawable.qr_code_background);
         final LinearLayout temp = new LinearLayout(getApplicationContext());
         temp.setGravity(Gravity.TOP);
@@ -215,7 +217,12 @@ public class buyed_tickets extends AppCompatActivity {
         item2.removeAllViews();
         item2.setLayoutParams(new LinearLayout.LayoutParams((int) (height * 0.23), (int) (height * 0.23)));
         ImageView img = new ImageView(getApplicationContext());
-        final val qr = Util.TextToImageEncode("Row:" + tk.getRow() + ". Place:" + tk.getPlace() + "." + "User id:" + tk.getIdaccount() + ". Price:" + tk.getPrice(), QRcodeWidth);
+        int qrSize =0 ;
+        if(qrMode.equals("true"))
+            qrSize = (int) (width * 0.7);
+        else
+            qrSize = (int) (width * 0.35);
+        final val qr = Util.TextToImageEncode("Row:" + tk.getRow() + ". Place:" + tk.getPlace() + "." + "User id:" + tk.getIdaccount() + ". Price:" + tk.getPrice(), qrSize);
         img.setLayoutParams(new LinearLayout.LayoutParams((int) (height * 0.2), (int) (height * 0.2)));
         img.setImageBitmap(qr);
 

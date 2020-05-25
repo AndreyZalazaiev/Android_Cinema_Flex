@@ -28,6 +28,7 @@ public class Settings extends AppCompatActivity {
         String emails = sPref.getString("Sent", "1");
         String soon = sPref.getString("Soon", "true");
         String notif = sPref.getString("Notifications", "true");
+        String qr = sPref.getString("QR", "true");
         if(mode.equals("true")) {
             night=true;
             setTheme(R.style.Theme_AppCompat);
@@ -37,15 +38,16 @@ public class Settings extends AppCompatActivity {
         getSupportActionBar().setTitle("Settings");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        switchState(mode, emails,soon,notif);
+        switchState(mode, emails,soon,notif,qr);
         ExtraParams();
         EmailsSetting();
         DayNightMode();
         Soon();
         Notifications();
+        QR();
     }
 
-    private void switchState(String mode, String emails,String soon,String nottif) {
+    private void switchState(String mode, String emails,String soon,String nottif,String qr) {
         if(mode.equals("true"))
         {
             Switch sw = findViewById(R.id.NightMode);
@@ -66,11 +68,18 @@ public class Settings extends AppCompatActivity {
             Switch sn = findViewById(R.id.Notify);
             sn.setChecked(true);
         }
+        if(qr.equals("true"))
+        {
+            Switch sqr = findViewById(R.id.QRquality);
+            sqr.setChecked(true);
+        }
     }
 
     private void ExtraParams() {
         TextView version = findViewById(R.id.Version);
         Button support = findViewById(R.id.Support);
+        Button reset = findViewById(R.id.Reset);
+        reset.setBackgroundResource(R.drawable.btn_background);
         support.setBackgroundResource(R.drawable.btn_background);
         support.setPadding(20,20,20,20);
         support.setOnClickListener(new View.OnClickListener() {
@@ -82,6 +91,7 @@ public class Settings extends AppCompatActivity {
         });
         if(night)
         {
+            reset.setTextColor(Color.WHITE);
             version.setTextColor(Color.WHITE);
         }
     }
@@ -159,6 +169,23 @@ public class Settings extends AppCompatActivity {
             }
         });
     }
+    public void QR() {
+        final Switch sw = findViewById(R.id.QRquality);
+        sw.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharedPreferences prefs = getApplication().getSharedPreferences("MyPref", MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+
+                if(!sw.isChecked()) {
+                    editor.putString("QR", ""+isChecked);
+                } else {
+                    editor.remove("QR");
+                }
+                editor.commit();
+            }
+        });
+    }
 
     @Override
     public void onBackPressed() {
@@ -177,6 +204,30 @@ public class Settings extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    public void OnReset(View v)
+    {
+        SharedPreferences prefs = getApplication().getSharedPreferences("MyPref", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.remove("DayNightMode");
+        editor.remove("Notifications");
+        editor.putString("Notifications", ""+true);
+        editor.remove("Soon");
+        editor.putString("Soon", ""+true);
+        editor.remove("Sent");
+        editor.putString("Sent", ""+1);
+        editor.remove("QR");
+        Switch nm = findViewById(R.id.NightMode);
+        Switch nf = findViewById(R.id.Notify);
+        Switch sn = findViewById(R.id.Soon);
+        Switch em = findViewById(R.id.Emails);
+        Switch qr = findViewById(R.id.QRquality);
+        qr.setChecked(false);
+        nm.setChecked(false);
+        nf.setChecked(true);
+        sn.setChecked(true);
+        em.setChecked(true);
+
     }
     public void Drin(View v)
     {

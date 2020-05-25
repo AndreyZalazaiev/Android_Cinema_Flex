@@ -47,11 +47,13 @@ public class about_account extends AppCompatActivity {
     private int color;
     private LinearLayout.LayoutParams marg;
     boolean night = false;
+    String qrMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         val sPref = getSharedPreferences("MyPref", MODE_PRIVATE);
         String mode = sPref.getString("DayNightMode", "true");
+        qrMode= sPref.getString("QR", "true");
         if (mode.equals("true")) {
             setTheme(R.style.Theme_AppCompat);
             night = true;
@@ -210,7 +212,12 @@ public class about_account extends AppCompatActivity {
     }
 
     public void showQR(View v) throws WriterException, Settings.SettingNotFoundException {
-        final val qr = Util.TextToImageEncode(Storage.idaccount, (int) (width * 0.1));
+        int qrSize =0 ;
+        if(qrMode.equals("true"))
+            qrSize = (int) (width * 0.4);
+        else
+            qrSize = (int) (width * 0.1);
+        final val qr = Util.TextToImageEncode(Storage.idaccount, qrSize);
         final val temp = new ImageView(getApplicationContext());
         temp.setImageBitmap(qr);
         temp.setMinimumHeight((int) (width * 0.8));
