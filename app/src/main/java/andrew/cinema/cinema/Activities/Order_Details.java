@@ -75,6 +75,7 @@ public class Order_Details extends AppCompatActivity {
     private int bonusItemes = 0;
     private int width;
     private int height;
+    String notif;
     private boolean night = false;
     private int TEXT_COLOR = Color.BLACK;
     private Date formLaucnh;
@@ -219,6 +220,7 @@ public class Order_Details extends AppCompatActivity {
         sPref = getSharedPreferences("MyPref", MODE_PRIVATE);
         String mode = sPref.getString("DayNightMode", "true");
         sent = Integer.parseInt(sPref.getString("Sent", "1"));
+        notif = sPref.getString("Notifications", "true");
         if (mode.equals("true")) {
             setTheme(R.style.Theme_AppCompat);
             TEXT_COLOR = Color.WHITE;
@@ -234,6 +236,7 @@ public class Order_Details extends AppCompatActivity {
         filmName = getIntent().getStringExtra("filmName");
         baseprice = Double.parseDouble(getIntent().getStringExtra("baseprice"));
         idsession = Integer.parseInt(getIntent().getStringExtra("idsession"));
+
         date = getIntent().getStringExtra("date");
         type = getIntent().getStringExtra("type");
         Display display = getWindowManager().getDefaultDisplay();
@@ -282,6 +285,7 @@ public class Order_Details extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 PaymentConfirmation confirmation = data.getParcelableExtra(PaymentActivity.EXTRA_RESULT_CONFIRMATION);
                 if (confirmation != null) {
+                    if(notif.equals("true"))
                     SendNotification("Pepega");
                     AddManyTickets(rowsStr, placesStr, Storage.CalculateBonuses(baseprice) * (prices.size() - bonusItemes),0);
 
@@ -314,7 +318,6 @@ public class Order_Details extends AppCompatActivity {
                     @Override
                     public void onResponse(Call<String> call, Response<String> response) {
                         Log.w("Tickets result:", "Works");
-                        int a = 3;
                     }
 
                     @Override

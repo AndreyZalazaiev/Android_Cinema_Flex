@@ -27,6 +27,7 @@ public class Settings extends AppCompatActivity {
         String mode = sPref.getString("DayNightMode", "true");
         String emails = sPref.getString("Sent", "1");
         String soon = sPref.getString("Soon", "true");
+        String notif = sPref.getString("Notifications", "true");
         if(mode.equals("true")) {
             night=true;
             setTheme(R.style.Theme_AppCompat);
@@ -36,14 +37,15 @@ public class Settings extends AppCompatActivity {
         getSupportActionBar().setTitle("Settings");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        switchState(mode, emails,soon);
+        switchState(mode, emails,soon,notif);
         ExtraParams();
         EmailsSetting();
         DayNightMode();
         Soon();
+        Notifications();
     }
 
-    private void switchState(String mode, String emails,String soon) {
+    private void switchState(String mode, String emails,String soon,String nottif) {
         if(mode.equals("true"))
         {
             Switch sw = findViewById(R.id.NightMode);
@@ -57,6 +59,11 @@ public class Settings extends AppCompatActivity {
         if(soon.equals("true"))
         {
             Switch sn = findViewById(R.id.Soon);
+            sn.setChecked(true);
+        }
+        if(nottif.equals("true"))
+        {
+            Switch sn = findViewById(R.id.Notify);
             sn.setChecked(true);
         }
     }
@@ -113,6 +120,23 @@ public class Settings extends AppCompatActivity {
                     editor.putString("DayNightMode", ""+isChecked);
                 } else {
                     editor.remove("DayNightMode");
+                }
+                editor.commit();
+            }
+        });
+    }
+    public void Notifications() {
+        final Switch notif = findViewById(R.id.Notify);
+        notif.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                SharedPreferences prefs = getApplication().getSharedPreferences("MyPref", MODE_PRIVATE);
+                SharedPreferences.Editor editor = prefs.edit();
+
+                if(!notif.isChecked()) {
+                    editor.putString("Notifications", ""+isChecked);
+                } else {
+                    editor.remove("Notifications");
                 }
                 editor.commit();
             }
