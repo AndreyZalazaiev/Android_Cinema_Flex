@@ -13,7 +13,7 @@
         android:allowBackup="true"
         tools:replace="android:label"
         android:label="Cinema Flex"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:icon="@drawable/icon"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Activities.Order_Details"></activity>

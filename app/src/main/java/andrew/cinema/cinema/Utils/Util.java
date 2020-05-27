@@ -47,13 +47,13 @@ public class Util {
         return bitmap;
     }
 
-    public static boolean isBirthday() {
-        if (Storage.doB != null) {
-            Date now = new Date();
+    public static boolean isBirthday() {//повертає true, якщо в користувача день народження
+        if (Storage.doB != null) {//чи встановлена дата в користувача
+            Date now = new Date();//актуальна дата
             Integer day = now.getDate();
             Integer month = now.getMonth();
             String date = Storage.doB;
-            String[] temp = date.split("T");
+            String[] temp = date.split("T");//ковертування дати
             String[] curent = temp[0].split("-");
             return Integer.parseInt(curent[1]) == (month + 1) && Integer.parseInt(curent[2]) == day;
         } else return false;

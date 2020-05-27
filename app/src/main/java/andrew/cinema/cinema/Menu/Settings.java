@@ -94,6 +94,8 @@ public class Settings extends AppCompatActivity {
             reset.setTextColor(Color.WHITE);
             version.setTextColor(Color.WHITE);
         }
+        else
+            reset.setTextColor(Color.BLACK);
     }
 
     private void EmailsSetting() {
