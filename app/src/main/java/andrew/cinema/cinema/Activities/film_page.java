@@ -116,7 +116,8 @@ public class film_page extends AppCompatActivity {
                 + "Age limitations: " + currentFilm.getAgeLimit());
         setup.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 28);
         TextView description = new TextView(getApplicationContext());
-        description.setText("Description:\n " + currentFilm.getDescription() + "\n");
+        description.setPadding(10,10,10,10);
+        description.setText("Description:\n" + currentFilm.getDescription() + "\n");
         description.setPadding(0,0,0,50);
         description.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 23);
 

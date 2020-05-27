@@ -25,7 +25,13 @@ public class Start extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         sPref = getSharedPreferences("MyPref", MODE_PRIVATE);
-        String mode = sPref.getString("DayNightMode", "true");
+        String mode = sPref.getString("DayNightMode", "non exist");
+        SharedPreferences.Editor editor = sPref.edit();
+        if(mode.equals("non exist"))
+        {
+            editor.putString("DayNightMode","false");
+            editor.commit();
+        }
         if (mode.equals("true"))
             setTheme(R.style.Theme_AppCompat_NoActionBar);
         super.onCreate(savedInstanceState);
